@@ -2,21 +2,23 @@
 \usepackage[catalan]{babel}
 \usepackage[utf8]{inputenc}
 \begin{document}
-\title{Syatemd}
+\title{Systemd}
 \author{Juan Aguilera}
 \maketitle
 
 \section{Referències}
 En quant es pugui, passar-ho a bibliografia latex.
+\begin{verbatim}
 https://wiki.archlinux.org/index.php/Systemd_%28Espa%C3%B1ol%29
 https://wiki.debian.org/es/systemd
-
+\end{verbatim}
 \section{comanda bàsica}
 systemctl és la comanda per gestionar totes les unitats amb systemd.
 
+\begin{verbatim}
 # systemctl start/stop/reload/status unidad
 # systemctl enable unidad --> activar l'inici automàtic en l'arrancada del sistema.
-
+\end{verbatim}
 \section{Unitats}
 
 Les unitats poden ser serveis, punts de muntatge, dispositius, sockets. Els tipus d'unitats es denoten amb el sufixe: <nom de la unitat>.tipus, on tipus pot ser service, mount, socket o device.
