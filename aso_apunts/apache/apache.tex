@@ -3,8 +3,8 @@
 % Last Change: sáb ene 16 06:00  2016 C
 %
 \documentclass[a4paper, 11pt]{article}
-\usepackage[catalan]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
 \usepackage[obeyspaces]{url}
 \usepackage{comment}
 \usepackage{hyperref}
@@ -24,7 +24,7 @@ hoffset \the\hoffset \newline
 paperwidth \the\paperwidth 
 \end{comment}
 
-\section{Instal·lació del paquet apache}
+\section{Instal·laci\'o del paquet apache}
 \paragraph{Versió d'apache \\}
 
 \scalebox{.5}{\includegraphics{apache_version.png}}
@@ -393,8 +393,23 @@ En aques cas \'es necessari tenir la capacitat de poder reescriure les capçaler
 \subsection{Reverse Proxy o gateway}
 mira wiki en español
 \paragraph{Principals directives \\}
-ProxyPass
-ProxyRequests ha d'estar a Off.
+\begin{itemize}
+	\item \verb+ProxyPass+ mapeja les peticions a una ruta local (del gateway) cap a una url d'un servidor remot. \href{http://httpd.apache.org/docs/current/mod/mod_proxy.html#proxypass}{M\'es detall a apache}
+	\item \verb+ProxyRequests+ ha d'estar a Off. Deshabilitem apache com a forward proxy.
+	\item \verb+BalancerMember+ afegeix un membre m\'es al balancejador definit dintre d'una directiva del tipus: \\
+		\begin{verbatim}
+		# definim el balancejador amb balancer://<i el nom que li volguem donar per identificar-lo>
+		<Proxy balancer://\ldots>
+		  BalancerMember <url del balancejador 1>
+			\ldots
+			BalancerMember <url del balancejador n>
+			\ldots
+		</proxy>
+		\end{verbatim}
+	\item \verb+ProxyPassReverse+ no \'es obligatòria per fer el balanceig de càrrega ni el proxy invers i el que fa \'es modificar les caçaleres \verb+Location+, \verb+Content-location+ i \verb+Uri+ de la resposta HTTP. O sigui, les respostes dels servidors remots seràn sobreescrits. \'es útil per exemple per a ficar en les capçaleres de les respostes HTTP les dades del servidor proxy i amagar la dels membresi amagar la dels membres.
+	\item \verb+ProxySet+ afegeix paràmetres al balancejador. Amb aquesta directiva podem donar valor al paràmetre lbmethod, el qual indica l'algoritme de balanceig que s'ha de fer servir.
+\end{itemize}
+ 
 % A partir d'aquí, comencen els apendixos
 \appendix
 \section{FAQ i Definicicions generals}
