@@ -1,0 +1,90 @@
+%        File: proxy.tex
+%     Created: mar mar 01 11:00  2016 C
+% Last Change: mar mar 01 11:00  2016 C
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\begin{document}
+\title{Túnels a trav\'es de proxies}
+\author{Juan Aguilera}
+\maketitle
+
+% \begin{comment}
+% oddsidemargin \the\oddsidemargin \newline
+% textwidth \the\textwidth \newline
+% marginparsep \the\marginparsep \newline
+% marginparwidth \the\marginparwidth \newline
+% hoffset \the\hoffset \newline
+% paperwidth \the\paperwidth 
+% \end{comment}
+
+\section{Tipus de túnels}
+
+Anem a contraposar dos tipus de túnels proxies: 
+\begin{itemize}
+	\item \textbf{Socks proxy}: túnel a trav\'es d'un servidor proxy \textbf{Socket Secure}. Exemple: Túnel ssh. 
+	\item \textbf{HTTP proxy}. Aquí el protocol HTTP fa de \textit{wrapper} del protocol a amagar del firewall.
+		\begin{itemize}
+			\item \textbf{Túnel HTTP sense utilitzar el mètode CONNECT en la petició HTTP}
+			\item \textbf{Túnel HTTP amb mètode CONNECT}
+		\end{itemize}
+	\item \textbf{VPN proxy}. Exemple: \textit{Hola.org}.
+\end{itemize}
+
+\subsection{Socks proxy Server}
+
+Volem connectar-nos a una màquina remota per un protocol restringit degut a un firewall o a un proxy. El que fem \'es fer una connexió a un servidor SOCKS dient en el moment de connectar-nos que volem que ens redirigeixi les dades que li enviem a trav\'es del túnel a un tercer. Un cop les dades arrien pel túnel a trav\'es del servidor SOCKS, aquest les reenvia tal qual al destinatari final. Alrev\'es les dades fan el mateix.
+
+\subsubsection{Capa en la que actue}
+
+En la pil·la de protocols de la capa OSI, aquest protocol es troba en la capa de sessió, entre la capa de presentació i la de transport.
+
+\subsubsection{Versió del protocol}
+
+Hi ha la versió 4 i la 5 que millora la anterior. Per exemple, la 5 implementa autenticació en la connexió al servidor SOCKS.
+
+\subsection{HTTP Proxy}
+
+S'utilitza el protocol HTTP per crear el túnel.
+
+\subsubsection{Amb petició HTTP CONNECT}
+
+Aquest tipus de petició HTTP \'es de la versió HTTP/1.1. El que es fa quan s'envia una petició HTTP amb el mètode CONNECT \'es demanar al servidor HTTP (en aquest cas el Proxy HTTP) que es connecti a una tercera màquina. 
+
+A partir d'aquesta petició HTTP CONNECT, la comunicació original entre origen i destinataris finals es fa de manera transparent a trav\'es del proxy, el qual reenvia a tots dos llocs els paquets que li arriben.
+
+La connexió segura HTTPS ia trav\'es d'un proxy forward s'inicia així.
+
+\subsubsection{Sense petició HTTP CONNECT}
+
+Aquí, tota la comunicació que volem fer arribar al destinatari final va encapçulada a trav\'es del protocol HTTP: Arriba encapçulada al servidor proxy, es desencapçula i arriba tal qual al destinatari. La que arriba del destinatari, s'encapçula i arriba al client i així sempre fins al final de la connexió.
+
+\subsection{SOCKS vs HTTP túnel}
+
+\begin{itemize}
+	\item SOCKS actua a m\'es baix nivell que HTTP.
+	\item SOCKS permet túnels de paquets UDP. HTTP, no.
+	\item SOCKS permet el mode reverse. HTTP, no.
+\end{itemize}
+
+\appendix
+
+\section{Definicions}
+\paragraph{Túnel protocol} Es pot fer servir en tres situacions:
+\begin{enumerate}
+	\item Permet a un usuari de xarxa accedir/proveir a/d'un servei que per defecte no està suportat directament en aquesta xarxa. Exemple: \textit{ipv6} sobre \textit{ipv4}.
+	\item Permet a un usuari remot connectar-se a una xarxa local (\textit{VPN}). Hi ha una identificació de l'usuari amb un extrem d'aquesta xarxa.
+	\item Amagar determinada comunicació mitjançant xifrat de dades.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+	\bibitem{} 
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+\end{thebibliography}
+
+\end{document}
+
+

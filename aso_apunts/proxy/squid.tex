@@ -1,0 +1,87 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage{hyperref}
+\begin{document}
+\title{Squid}
+\maketitle
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+% TODO COMPROVAR AMB EL WIRESHARK COM ES FAN LES HTTP REQUESTS DE TIPUS CONNECT I ELS TÚNELS TCP
+
+\section{Squid com a proxy}
+
+S'ha de tenir en compte que quan un navegador es connecta a internet a trav\'es d'un proxy es crea una connexió TCP del client cap al proxy i una altra del proxy cap al servidor:
+
+\begin{quote}
+	The proxy server MUST signal persistent connections separately with its clients and the origin servers (or other proxy servers) that it connects to. Each persistent connection applies to only one transport link.\cite{RFC2068}
+\end{quote}
+Aquestes connexions es poden fer de dues maneres:
+\begin{itemize}
+	\item La connexió es fa a trav\'es del proxy però els missatges xifrats viatgen encapçulats a trav\'es del protocol HTTP.
+	\item La conneció es crea a partir d'una petició CONNECT des del client. El proxy la rep i estableix una connexió TCP cap al servidor.
+\end{itemize}
+En el primer l'squid no pot desxifrar els missatges que hi passen per aquests túnels ja que la connexió segura es negocia directament entre client i servidor.
+
+\section{Squid com a proxy pel tràfic HTTPS}
+
+\textbf{Connexió HTTPS a trav\'es de proxy amb petició CONNECT}\\
+Quan un usuari vol accedir a una pàgina HTTPS a trav\'es d'un proxy s'hauria de procedir de la següent manera:
+\begin{enumerate}
+	\item Usuari envia HTTPS request.
+	\item Proxy rep la petició. La petició HTTPS porta el mètode CONNECT informant amb qui s'ha de connectar de manera segura el proxy:
+		\begin{quote}
+		opens a TCP tunnel through Squid to the origin server using the CONNECT request method.\cite{SQUID_HTTPS}
+		\end{quote}
+	\item Es genera un túnel TCP entre el proxy i servidor. Aquest túnel ha de ser segur i s'utilitza el certificat del servidor original per aquesta connexió.
+	\item Per a que el túnel del clien al proxy tamb\'e sigui segur necessitem que el proxy tingui un certificat i un parell de claus.
+	\item L'usuari rep un missatge HTTP de resposta del proxy amb codi 200 informant que el túnel s'ha establert.
+	\item A partir d'ara el proxy deixa passar paquets HTTPS per ambdues direccions sense interpretar o comprendre els paquets que hi circulen.
+\end{enumerate}
+\textbf{Desxifrat de paquets HTTPS des del proxy}\\
+L'Objectiu d'un servidor proxy hauria de ser sobretot donar privacitat als seus usuaris. Squid pot desxifrar els paquets HTTPS que van i venen d'una connexió HTTPS com si fos un \textit{man in the midle} però no hauria de ser així.
+
+\section{Squid com a proxy transparent per HTTP i HTTPS}
+
+Redirigem els paquets que arriben al firewall als ports on escoltarà l'squid:
+
+\begin{verbatim}
+iptables  -t nat -A PREROUTING -i eth0  -p tcp --dport 80 -j REDIRECT --to-port 3128 
+iptables  -t nat -A PREROUTING  -i eth0 -p tcp --dport  443 -j REDIRECT --to-port 3130 
+\end{verbatim}
+Generem el certificat i claus i despr\'es configurem squid:
+
+\begin{verbatim}
+http_port 3128 transparent 
+https_port 3130 transparent cert=/”path to server.crt” key=/”path to server.key”. 
+\end{verbatim}
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+
+\begin{thebibliography}{99}
+	\bibitem{SQUID_HTTPS} \url{http://wiki.squid-cache.org/Features/HTTPS}
+	\bibitem{RFC2068} \url{http://www.ietf.org/rfc/rfc2068.txt}
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+\end{thebibliography}
+
+\end{document}
+
+
