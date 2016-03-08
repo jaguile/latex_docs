@@ -26,13 +26,8 @@ paperwidth \the\paperwidth
 
 \section{Instal·laci\'o del paquet apache}
 \paragraph{Versió d'apache \\}
-
-\scalebox{.5}{\includegraphics{apache_version.png}}
-
-d'entre les novetats de la versió apache 2.4 respecte les versions anteriors cap destacar que la directiva \textit{NameVirtualHost} ja no \'es útil i \'es \textit{deprecated}.
-
-Una altra novetat \'es que es poden definir variables en la configuració.
-
+\scalebox{.5}{\includegraphics{apache_version.png}} \\
+d'entre les novetats de la versió apache 2.4 respecte les versions anteriors cap destacar que la directiva \textit{NameVirtualHost} ja no \'es útil i \'es \textit{deprecated}.\\
 Per m\'es info, veure \href{https://httpd.apache.org/docs/2.4/new_features_2_4.html}{les new features d'apache a la pàgina oficial}\cite{DOC}.
 
 \section{Configuració d'apache}
@@ -206,13 +201,13 @@ Per el mínim de funcionalitat:
 \begin{itemize}
 	\item \verb+mod_proxy+: mòdul necessari per a fer que Apache sigui un proxy. 
 	\item \verb+mod_proxy_balancer+: per a que faci de balancejador de càrrega.
-	\item \verb+mod_cache+ si el que volem \'es un proxy que faci tamb\'e de servidor cau. Amb aquest mòdul farà falta tamb\'e el mòdul 
+	\item \verb+mod_cache+ si el que volem \'es un proxy que faci tamb\'e de servidor cau. Amb aquest mòdul farà falta tamb\'e el mòdul \verb+mod_cache_disk+ i/o el mòdul \verb+mod_file_cache+.
 \end{itemize}
 
 Protocols que pot implementar com a proxy:
 
-%TODO IMATGE DELS MÒDULS QUE IMPLEMENTEN PROXY PROTOCOLS. 
-%TODO POSAR COM A PEU D'IMATGE LA FRASE ANTERIOR
+%TODO JUST AQUI: IMATGE DELS MÒDULS QUE IMPLEMENTEN PROXY PROTOCOLS.  
+%TODO JUST AQUI: POSAR COM A PEU D'IMATGE LA FRASE ANTERIOR
 
 \subsection{Forward Proxy}
 
@@ -221,7 +216,7 @@ Protocols que pot implementar com a proxy:
 	\item \verb+ProxyRequests+ \\
 		ha d'estar a On. si el proxy ha de ser un proxy per llocs http o llocs ftp, necessitarem els mòduls \verb+mod_proxy_http+ i el \verb+mod_proxy_ftp+. Si els llocs són HTTPS, a m\'es a m\'es necessitem habilitat el \verb+mod_proxy_connect+.
 	\item \verb+<Proxy>+\\
-		Per aplicar directives relatives al contingut que es vol accedir a trav\'es del proxy i que està indicat com a paràmetre al costat de la directiva. Per exemple: en la directiva \verb+<Proxy http://cnn.com/*>+ configurarem què s'ha de fer per accedir a cnn.com a trav\'es del proxy. Un altre exemple: \\
+		Per aplicar directives relatives al contingut que es vol accedir a trav\'es del proxy i que està indicat com a paràmetre al costat de la directiva. Per exemple: en la directiva \verb+<Proxy http://cnn.com/*>+ configurarem què s'ha de fer per accedir a cnn.com a trav\'es del proxy. Un altre exemple: 
 		\begin{verbatim}
 		<Proxy ''*''>
 		  Require host internal.example.com
@@ -232,7 +227,7 @@ Protocols que pot implementar com a proxy:
 \end{itemize}
 
 \subsubsection{Proxy com a servidor cau}
-Els objectius d'un servidor són els d'evitar total o parcialment les peticions que fan els clients als servidors web per a disminuir el tràfic i augmentar l'ample de banda. Si no millora significativament el rendiment un servidor cau no serveix de res. Hem de tenir clar que muntar un servidor cau \'es costós. \'Es necessari que aquest tingui un molt bon acc\'es a internet per a respondre amb celeritat a les peticions dels clients. 
+Els objectius d'un servidor cau són els d'evitar total o parcialment les peticions que fan els clients als servidors web per a disminuir el tràfic i augmentar l'ample de banda. Si no millora significativament el rendiment un servidor cau no serveix de res. Hem de tenir clar que muntar un servidor cau \'es costós. \'Es necessari que aquest tingui un molt bon acc\'es a internet per a respondre amb celeritat a les peticions dels clients. 
 
 \paragraph{A tenir en compte en el tràfic web:}
 
@@ -250,13 +245,13 @@ Per Apache com a servidor cau, el mòdul que hem de fer servir \'es \verb+mod_ca
 	\item \verb+CacheRoot+: directori arrel on estarà el cau
 	\item \verb+CacheEnable+: quin contingut guardem al cau i a on.
 	\item \verb+CacheDisable+: quin contingut no hem de guardar.
-	\item \verb+CacheIgnoreCacheControl+: a on, ignora la petició de no utilitzar la cache per a aquest contingut.
+	\item \verb+CacheIgnoreCacheControl+: amb valor a \textit{on}, ignora la capçalera \textit{Cahe-Control:no-cache} o la capçalera \textit{Pragma: no-cache} de la petició HTTP que serveix per demanar que el contingut de la resposta no sigui servit de la cache.
 	\item \verb+CacheIgnoreHeaders+: No guardem les capçaleres de les respostes al cau.
-	\item \verb+CacheIgnoreNoLastMod+: Normalment, les respostes sense la capçalera Last Modified no són guardades al cau. Amb aquesta directiva a on ignorem aquest fet.
-	\item \verb+CacheIgnoreQueryString+: Normalment, les respostes amb diferent query string es consideren diferents. Amb aquesta directiva a on ignorem aquest fet i donem de resposta qualsevol contingut encara que defereixi de la query string.
+	\item \verb+CacheIgnoreNoLastMod+: Normalment, les respostes sense la capçalera Last Modified no són guardades al cau. Amb aquesta directiva a \textit{on} ignorem aquest fet.
+	\item \verb+CacheIgnoreQueryString+: Normalment, les respostes amb diferent query string es consideren diferents. Amb aquesta directiva a \textit{on} ignorem aquest fet i donem de resposta qualsevol contingut encara que difereixi de la query string del contingut guardat.
 	\item \verb+CacheMaxExpire+: el máxim temps en segons que guardem un document.
 	\item \verb+CacheMinExpire+: el mínim temps en segons que guardem un document.
-	\item \verb+CacheStorePrivate|NoStore|Expired+: guardem a la cache contingut encara que tingui la directiva private, no store o que sigui obsolet.
+	\item \verb+CacheStorePrivate|NoStore|Expired+: guardem a la cache contingut encara que tingui capçaleres privades (per defecte no es guarden), no store o respostes en les que hagi expirat el contingut.
 \end{itemize}
 
 I aquí enumerem algunes de \verb+mod_cache_disk+:
@@ -284,7 +279,7 @@ Configuració de proxy.conf. Per accedir a qualsevol lloc a trav\'es del proxy s
 \paragraph{HTTP Headers que intervenen en un servidor cau}
 
 \begin{itemize}
-	\item \verb+Cache-control+: Sobreescriu els algoritmes de cau sobre un fontingut en particular. Pot estar en el client com en el servidor. Pot portar molts valors o directives. Entre elles, la directiva \textit{max-age}.
+	\item \verb+Cache-control+: Sobreescriu els algoritmes de cau sobre un contingut en particular. Pot estar en el client com en el servidor. Pot portar molts valors o directives. Entre elles, la directiva \textit{max-age}.
 	\item \verb+Age+: Capçalera que inclou un servidor cau en la seva resposta si el contingut el serveix ell informant de l'edat d'aquest. O sigui, si en una resposta apareix aquesta capçalera, vol dir que el contingut no ve de primera mà. NO obstant això, aquesta capçalera nom\'es la inclouen els servidors que acompleixen el protocol HTTP/1.1, per lo que l'absència d'aquesta capçalera tamb\'e pot voler dir que el contingut ha sigut donat per un servidor cau HTTP/1.0.
 	\item \verb+Date+: Des de la resposta, \'es el temps en el que aquesta fou generada.
 	\item \verb+Expires+: Data en la qual el contingut es considera obsolet.
@@ -316,15 +311,14 @@ Finalment, determinem si un confingut \'es obsolet o no amb la sergüent comprov
 \end{quote}
 
 \end{quote}
-\paragraph{Què pot ser contingut susceptible d'estar en caui \\}
+\paragraph{Què pot ser contingut susceptible d'estar en cau \\}
 
 \begin{enumerate}
 	\item Caching must be enabled for this URL. See the CacheEnable and CacheDisable directives.
 	\item The response must have a HTTP status code of 200, 203, 300, 301 or 410.
 	\item The request must be a HTTP GET request.
 	\item If the response contains an \textit{Authorization:} header, it must also contain an \textit{s-maxage}, \textit{must-revalidate} or \textit{public} option in the \textit{Cache-Control:} header, or it won't be cached.
-	\item If the URL included a query string (e.g. from a HTML form GET method) it will not be cached unless the response specifies an explicit expiration by including an \textit{Expires:} header or the \textit{max-age} or \textit{s-maxage} directive of the \textit{Cache-Control:} header, as per RFC2616 sections 13.9 and 13.2.1. \\
-	\textbf{Nota:} \textit{s-maxage} \'es com el max-age però el sobreescriu si hi \'es.
+	\item If the URL included a query string (e.g. from a HTML form GET method) it will not be cached unless the response specifies an explicit expiration by including an \textit{Expires:} header or the \textit{max-age} or \textit{s-maxage} directive of the \textit{Cache-Control:} header, as per RFC2616 sections 13.9 and 13.2.1. \footnote{\textit{s-maxage} \'es com el max-age però el sobreescriu si hi \'es.}
   \item si en \textit{Cache-control} hi ha \textit{private}, en principi no \'es \textit{cachejable} a no ser que tingui Apache la directiva \textit{CacheStorePrivate}.
   \item si en \textit{Cache-control} hi ha \textit{no-store}, en principi no \'es \textit{cachejable} a no ser que tingui Apache la directiva \textit{CacheStoreNoStore}.
 	\item A response will not be stored if it includes a \textit{Vary:} header containing the match-all ``*''.
@@ -353,7 +347,7 @@ Per Una URL guardada a disc es crea un directory amb un hash de la url que inclo
 
 \subparagraph{htcacheclean} comanda per control·lar l'espai del contingut al cau. Es pot execuar com a comanda o com a dimoni. Si s'usa com a comanda, pot executar-se periòdicament amb cron o posant-la en el fitxer \verb+/etc/rc.local+.
 
-\paragraph{Evitar massives peticions al servidor original per un mateix contingut obsoleti \\}
+\paragraph{Evitar massives peticions al servidor original per un mateix contingut obsolet \\}
 
 Amb Apache això es pot evitar marcant un contingut com a \textit{Lock} i tenir-lo en un directori per a aquests tipus de continguts. Aleshores, si arriba una altra petició per el mateix contingut ja no es torna a enviar una nova petició al servidor demanant per una actualització d'aquest i així nom\'es es fa una vegada. Les peticions que arriben despr\'es de la primere esperen aleshores a que arribi el refresc i es donen aleshores del cau. D'això se'n diu \textit{Thundering Herd}. Directives associades:
 \begin{itemize}
