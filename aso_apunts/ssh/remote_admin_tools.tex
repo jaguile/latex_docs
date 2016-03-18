@@ -1,0 +1,258 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage{hyperref}
+\begin{document}
+\title{Eines per a l'administració remota de servidors}
+\maketitle
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+\section{Synctool}
+La missió principal d'aquesta eina \'es la de sincronitzar fitxers de configuració d'un conjunt de servidors remots en base a un repositori local.
+A l'igual que pssh utilitza eines com ssh o rsync per a la distribució dels fitxers que s'han de sincronitzar. Un cop sincronitzats en els servidors, synctool permet executar comandes del tipus \verb+service dimoni restart+. Pots, a m\'es, customitzar syctool per a executar m\'es comandes.\\
+\\
+\textbf{Nota}: \textbf{node} \'es un host dintre d'un grup de computadores o \textbf{cluster}.
+
+Per treballar amb synctool hem de fer-ho per ssh sense password. O sigui, del node mestre fins als nodes del clúster ha d'haver autenticació per claus assimètriques. D'igual manera, si volem protegir les claus privades haurem de fer servir l'ssh-agent.
+
+
+\section{Puppet}
+% REFERENCIES %%%%%%%%%%%%%%%%
+% http://www.debian-administration.org/article/528/2/2_An_introduction_to_using_Puppet
+% http://stackoverflow.com/questions/tagged/puppet
+% http://serverfault.com/questions/tagged/puppet
+% https://forge.puppetlabs.com/
+
+% què es pot fer amb puppet:
+% managing upgrades of hundred debian servers
+% Register a new domain/hostname with linux
+% Install packaegs using apt-et
+% Copy files
+% Run some bash scripts
+% Generating / managing config files for hosted application
+% Execute commands on multiple servers
+
+% TODO crear mòduls de puppet. En forge.puppetlabs.com hi ha un apartat 
+
+\subsection{Instal·lació}
+Ens hem de baixar la versió depenent de la nostra distribució:
+\begin{verbatim}
+root@master:~# wget https://apt.puppetlabs.com/puppetlabs-release-jessie.deb
+root@master:~# dpkg -i puppetlabs-release-jessie.deb
+\end{verbatim}
+La instal·lació del paquet que ens hem baixat ens configura nous repositoris on finalment estàn allotjats els binaris i el codi font de puppet.
+\begin{verbatim}
+root@master:/etc/apt/sources.list.d# apt-get install puppetmaster
+\end{verbatim}
+Al final, a part de depèndencies requerides:
+\begin{verbatim}
+root@master:/etc/apt/sources.list.d# dpkg -l | grep puppet
+ii  puppet-common          3.7.2-4   all   configuration management system
+ii  puppetlabs-release     1.0-11    all   ``Package to install Puppet Labs gpg key and apt repo''
+ii  puppetmaster           3.7.2-4   all   configuration management system, master service
+ii  puppetmaster-common    3.7.2-4   all   configuration management system, master common files
+\end{verbatim}
+Pel client fem el mateix procès però en comptes d'instal·lar el paquet \verb+puppetmaster+ instal·lem \verb+puppet+. Despr\'es configurem el fitxer \verb+/etc/hosts+ pròpiament per a que tots dos es vegin per el nom de la màquina.
+
+\subsection{Hello World}
+Hem de crear un fitxer sota de \verb+/etc/puppet/manifiest+ amb extensió \verb+.pp+. Aquest fitxer \'es un fitxer de codi declaratiu de puppet on definim els nostres recursos. Cada recurs \'es d'un tipus determinat i t\'e un nom. Això \'es el mínim que ha de tenir. Veurem que pot tenir propietats amb valors (parell de claus separades per \verb+=>+). El codi t\'e la següent aparença:
+\begin{verbatim}
+notify{'Hello world':
+}
+\end{verbatim}
+Aquest \'es un recurs de tipus \textit{notify} Ara el que hem de fer \'es executar-lo:
+\begin{verbatim}
+$ puppet apply hello.pp
+Notice: Compiled catalog for master.home in environment production in 0.05 seconds
+Notice: Hello world
+Notice: /Stage[main]/Main/Notify[Hello world]/message: defined 'message' as 'Hello world'
+Notice: Finished catalog run in 0.04 seconds
+\end{verbatim}
+Un altra tipus de recurs \'es \textit{file} el qual serveix per crear un fitxer amb un determinat contingut. En aquest exemple anem a crear un fitxer a \verb+/tmp+ que es diu \textit{demo.txt}. El fitxer s'ha de crear si no existeix i el seu contingut ha de ser 'Hello World':
+\begin{verbatim}
+usuario@master:/etc/puppet/manifests$ cat demo.pp 
+file {'/tmp/demo.txt':
+    # si el fitxer no exixteix, que el crei
+    ensure => present,
+    # contingut del fitxer
+    content => 'Hello World',
+}
+usuario@master:/etc/puppet/manifests$ puppet apply demo.pp 
+Notice: Compiled catalog for master.home in environment production in 0.21 seconds
+Notice: Finished catalog run in 0.03 seconds
+usuario@master:/etc/puppet/manifests$ ls /tmp
+demo.txt
+usuario@master:/etc/puppet/manifests$ cat /tmp/demo.txt 
+Hello Worldusuario@master:/etc/puppet/manifests$ 
+\end{verbatim}
+
+\subsection{Test Model Client-Servidor}
+Anem a fer que un agent apliqui un .pp del servidor. Per defecte, el .pp s'ha de dir \textit{site.pp}. És el manifest per defecte que els clients llegeixen del master server. En arrancar l'agent, si tot va b\'e el procès \'es el següent (el primer cop que s'executa l'agent s'estableixen els certificats):
+\begin{itemize}
+	\item Agent genera claus
+	\item Master li envia certificat de la autoritat certificadora i certificats
+	\item Agent li envia claus per ser signades per la CA
+	\item Master signa claus. Ho fem a mà
+	\item Agent es baixa .pp i executa la coniguració
+\end{itemize}
+
+\begin{verbatim}
+root@client0:~# puppet agent --server master.home --verbose --no-daemonize 
+														 --waitforcert 10
+Info: Creating a new SSL key for client0.home
+Info: csr_attributes file loading from /etc/puppet/csr_attributes.yaml
+Info: Creating a new SSL certificate request for client0.home
+Info: Certificate Request fingerprint (SHA256): 
+  6D:AD:C0:57:4E:82:67:79:0F:25:35:39:CF:C1:35:67:ED:12:6C:27:32:87:43:E1:55:8F:65:D9:94:87:4B:91
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Info: Caching certificate for client0.home
+Notice: Starting Puppet client version 3.7.2
+Info: Retrieving pluginfacts
+Info: Retrieving plugin
+Info: Caching catalog for client0.home
+Info: Applying configuration version '1457863005'
+Notice: /Stage[main]/Main/File[/tmp/demo2.txt]/ensure: created
+Notice: Finished catalog run in 0.12 seconds
+^CNotice: Caught INT; calling stop
+root@client0:~# ls /tmp
+demo2.txt
+root@client0:~# 
+\end{verbatim}
+En el master hem de tenir el \textit{site.pp}:
+\begin{verbatim}
+file {'/tmp/demo2.txt':
+  # si el fitxer no exixteix, que el crei
+  ensure => present,
+  # contingut del fitxer
+  content => 'Hello World',
+  owner => 'root',
+  mode => 777,
+}
+\end{verbatim}
+En el client, l'avís \verb+Notice: Did not receive certificate+ vol dir que no ha rebut el seu certificat signat per el master. Per fer-ho, des del master:
+\begin{verbatim}
+root@master:/etc/puppet/manifests# puppet cert sign client0.home
+\end{verbatim}
+Per veure els certificats dels clients:
+\begin{verbatim}
+root@master:/etc/puppet/manifests# puppet cert list
+\end{verbatim}
+Al final, en aquest exemple, se'ns haurà creat un fitxer a tmp amb propietari i permisos com els configurats en el \textit{site.pp}.
+
+\paragraph{Problemes}\\
+\begin{enumerate}
+	\item que no coincideixin els noms de les màquines amb els noms que s'han posat en els certificats. Podem tocar el paràmetre certname a la configuració del master, o afegir en el \verb+/etc/hosts+ com a nom a les màquines el que hem posat en el certificat i en la comanda de l'agent, \verb+--server <posem el nom que surt al certificat>+.
+	\item que no s'envii el certificat des de l'agent. Tornem a començar: des del master, esborrem el certificat de l'agent i, des del client, igual:
+	\begin{itemize}
+		\item Master:
+			\begin{verbatim}
+			root@master:/etc/puppet/manifests# puppet cert clean client0.home
+			\end{verbatim}
+		\item client:
+			\begin{verbatim}
+			root@client0:~# find /var/lib/puppet/ssl -name client0.home.pem -delete
+			\end{verbatim}
+			I tornem a executar la comanda en l'agent.
+			% NOTA: TINC IMATGES Fetes
+	\end{itemize}
+	\item en el client, l'agent no s'arrenca donant un error. Amb això, hem de tenir clar les següents coses:
+		\begin{enumerate}
+			\item En instal·lar \textit{puppet} en el client tenim un servei \textit{puppet agent} iniciat per defecte.
+			\item Si hi ha un \textit{agent puppet} iniciat no es pot iniciar cap altre, per la qual cosa, hem de parar el que hi hagi arrancat i hem de treure el bloqueig de que s'inicii qualsevol agent amb la comanda \verb+puppet agent --enable+
+			\item Un cop desbloquejat, ja podem executar la comanda per rebre la configuració del master.
+		\end{enumerate}
+\end{enumerate}
+
+\subsection{Nodes}
+Els nodes permeten a un servidor \textit{Puppet} tenir diferents recursos diferenciats per clients. Els nodes es defineixen en el manifest \textit{nodes.pp} el qual s'ha de importar des del fitxer \textit{site.pp}. Exemple del fitxer \textit{nodes.pp}:
+
+\begin{verbatim}
+# el nom que li donem al node correspon al nom de la màquina
+node client0 {
+  package {'nginx':
+    # ens hem d'assegurar que el paquet estigui instal·lat
+    # si no ho està, s'instal·la
+    ensure => installed,
+  }  	
+}
+
+# nodes no definits explícitament
+node default {
+  notify {'Default node':
+  }
+}
+\end{verbatim}
+Exemple de fitxer \textit{site.pp}:
+\begin{verbatim}
+import 'nodes.pp'
+\end{verbatim}
+Agent \textit{client0}, aleshores, en recuperar la configuració, haurà instal·lat \textit{nginx} (abans no hi era):
+\begin{verbatim}
+root@client0:/home/usuario# puppet agent --server master.home --verbose 
+                                         --no-daemonize --waitforcert 10
+Notice: Starting Puppet client version 3.7.2
+Info: Retrieving pluginfacts
+Info: Retrieving plugin
+Info: Caching catalog for client0.home
+Info: Applying configuration version '1458290609'
+Notice: /Stage[main]/Main/Node[client0]/Package[nginx]/ensure: 
+                          ensure changed 'purged' to 'present'
+Notice: Finished catalog run in 60.09 seconds
+^CNotice: Caught INT; calling stop
+root@client0:/home/usuario# dpkg -l nginx
+ii  nginx          1.6.2-5+deb8 all          small, powerful, scalable web/prox
+\end{verbatim}
+Si a la propietat \textit{ensure} li donem el valor \textit{absent}, succeirà el contrari.
+\subsection{Recursos}
+\begin{itemize}
+	\item \textbf{notify}
+	\item \textbf{file}
+	\item \textbf{package}: defineix un paquet de software a instal·lar o desinstal·lar en un node.
+	\item \textbf{service}: Possibles propietats:
+		\begin{itemize}
+			\item \verb+ensure+, que pot prendre els valors \textit{stopped} o \textit{running}
+			\item \verb+enable+, per configurar el seu arranc automátic, que pot prendre els valors \textit{true} o \textit{false}.
+		\end{itemize}
+\end{itemize}
+\section{Dependències entre recursos}
+Si tenim un recurs de tipus \textit{service} el que volem, per exemple, \'es que estigui iniciat però sempre i quan tinguem el paquet instal·lat, o que es notifiqui cada canvi en el fitxer de configuració d'aquest servei ja que no es reflectiràn aquests canvis si no es fa, com a mínim, un \textit{reload} del servei.
+
+Qualsevol crida que fem a un recurs des d'un altre recurs, com a regla de sitaxi, hem de començar a nomenar el tipus de recurs amb lletra majúscula i, com si fos un array, entre corxets i cometes, especificar el nom del recurs al que fem referència:
+
+\section{bcfg2}\cite{BCFG2}
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+
+\begin{thebibliography}{99}
+	\bibitem{SYNCTOOL} \url{http://walterdejong.github.io/synctool/}
+	\bibitem{BCFG2} \url{http://docs.bcfg2.org/index.html}
+	\bibitem{COMP_EINES} \url{https://en.wikipedia.org/wiki/Comparison_of_open-source_configuration_management_software}
+	\bibitem{PUPPET} \url{https://forge.puppetlabs.com/} 
+\end{thebibliography}
+
+\end{document}
+
+

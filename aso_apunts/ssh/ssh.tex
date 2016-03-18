@@ -1,0 +1,70 @@
+%        File: ssh.tex
+%     Created: mié mar 02 11:00  2016 C
+% Last Change: mié mar 02 11:00  2016 C
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\begin{document}
+\title{SSH i eines d'acc\'es remot}
+\author{Juan Aguilera}
+\maketitle
+
+% \begin{comment}
+% oddsidemargin \the\oddsidemargin \newline
+% textwidth \the\textwidth \newline
+% marginparsep \the\marginparsep \newline
+% marginparwidth \the\marginparwidth \newline
+% hoffset \the\hoffset \newline
+% paperwidth \the\paperwidth 
+% \end{comment}
+
+% TODO APUNTS DRIVE SOBRE SSH I ACCÉS REMOT
+% TODO DIsseny d'apunts ssh de la web en latex
+% TODO PROVAR GNU Screen
+% TODO PROVAR LES EINES GRÀFIQUES D'ACCÉS REMOT
+% TODO NAGIOS | ANSILE | PUPPET | OCS INVENTORY - YAML / JSON
+
+\section{GNU Screen}
+\subsection{Què podem fer amb GNU Screen}
+
+\begin{enumerate}
+	\item Executar múltiples consoles a la vegada
+	\item associar/desassociar una consola remota
+	\item assistència remota per terminal
+\end{enumerate}
+
+\subsection{Conceptes}
+
+\textbf{Sessió} \'es l'àrea de treball que es crea quan executes la comanda \verb+screen+.
+
+\textbf{Finestra} \'es una consola oberta dintre d'una sessió. Poden haver-hi múltiples.
+
+\textbf{Regió} \'es una divisió d'una finestra. Dintre de cada regio pot haver-hi una altra finestra. \textbf{Split} \'es la porció de la regió.
+
+% http://www.linux.com/learn/tutorials/442418-using-screen-for-remote-interaction
+% http://gnuscreen.org/
+% http://www.gnu.org/software/screen/manual/html_node/index.html#Top
+
+\section{Proves amb GNU Screen}
+
+\begin{enumerate}
+	\item Assistència remota per consola: obres sessió screen; activas el mode multiusuari; l'altre es connecta des de una altra màquina per ssh, per exemple (o amb un altre usuari); des de la màquina remota fas screen -x <el nom que li has donat a la sessió>
+	\item Idem però ara l'usuari que es connecta \ès diferent usuari local. No me ha funcionado. Hay que dar permiso a la otra persona y previamente dar el setuid al binario.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+	\bibitem{WIKI_NX} \urL{https://en.wikipedia.org/wiki/NX_technology}
+	\bibitem{WIKI_RESUM} \url{https://en.wikipedia.org/wiki/Comparison_of_remote_desktop_software}
+	\bibitem{WIKI_GNUSCN} \url{https://en.wikipedia.org/wiki/GNU_Screen} 
+	\bibitem[<+biblabel+>]{GNUSCN} \url{https://www.gnu.org/software/screen/}
+	\bibitem{WIKI_ES_GNUSCN} \url{https://es.wikipedia.org/wiki/GNU_Screen}
+	\bibitem[]{BLOG_GNUSCN} \url{https://phenobarbital.wordpress.com/2013/02/18/linux-usando-gnu-screen/}
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+\end{thebibliography}
+
+\end{document}
+
+
