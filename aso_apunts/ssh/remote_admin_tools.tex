@@ -366,16 +366,17 @@ Anem  veure un exemple de com crear i fer servir plantilles. Anem a crear una cl
 		my website is www.aguileraj.com
 		\end{verbatim}
 \end{enumerate}
-Exemple:\\
-hay que tener un fichero de configuración centralizado en el master de tal manera que ante un cambio en ese fichero se haga una notificación a parte de bajarse el fichero de configuración en el agente. Para eso, recurso file para el fichero con el siguiente valor en las propiedades:
-\begin{verbatim}
+\textbf{Exemple:}
+
+Imaginem que volem tenir el fitxer de configuració \\ \verb+/etc/apache2/apache2.conf+ principal d'\textit{Apache} centralitzat en el servidor \textit{Puppet} de tal manera que, davant qualsevol canvi en aquest fitxer, tots els serveis \textit{Apache} dels clients actualitzin aquests canvis inmediatament en els seus respectius fitxers i que, a m\'es, facin un \textit{reload} en el servei de tal manera que els canvis es facin efectius. Per fer això s'ha de tenir una plantilla del fitxer centralitzada i un recurs de tipus \textit{file} apuntant als fitxers de configuració dels clients, de tal manera que el contingut del fitxer sigui la plantilla i que es notifiqui davant de qualsevol canvi al servei:
+\begin{verbatim} 
 file {'/etc/apache2/apache2.conf':
-content => templates ('/etc/puppet/modules/apache/templates/apache2.conf'),
-notify => Service ['apache2'],
-...
+  content => 
+	  templates ('/etc/puppet/modules/apache/templates/apache2.conf'),
+  notify => Service ['apache2'],
+  ...
 }
 \end{verbatim}
-Qualsevol canvi en aquest fitxer fa que automàticament vagi als clients.
 \subsection{Facts}
 Variables predefinides del sistema i amb les quals podem tamb\'e crear estructures de control de fluxe com \textit{if} o \textit{switch} o \textit{if \ldots else}. Per veure la llista de \textit{facts} definides en el sistema, \verb+facter+. Anem a veure un exemple en el que, depenent de la variable d'entorn o \textit{facter} \verb+$osfamily+, instal·lem el paquet \textit{apache2} si el sistema \'es \textit{Debian} o el paquet \textit{httpd} si \'es \textit{Red Hat}. Ho farem com en l'exemple anterior, a \textit{templates}, creant una subclasse de la classe \textit{linuxbase} que es digui \textit{install}. Fitxer \verb+/etc/puppet/modules/linuxbase/manifests/install.pp+:
 \begin{verbatim}
