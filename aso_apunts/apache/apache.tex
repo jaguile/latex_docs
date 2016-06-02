@@ -9,6 +9,7 @@
 \usepackage{comment}
 \usepackage{hyperref}
 \usepackage[pdftex]{graphicx}
+\usepackage{longtable}
 %\setlength{\parindent}{5pt}
 \begin{document}
 \title{Apunts d'Apache}
@@ -23,6 +24,9 @@ marginparwidth \the\marginparwidth \newline
 hoffset \the\hoffset \newline
 paperwidth \the\paperwidth 
 \end{comment}
+
+\tableofcontents
+\newpage
 
 \section{Instal·laci\'o del paquet apache}
 \paragraph{Versió d'apache \\}
@@ -51,7 +55,7 @@ Per entendre les directives a apache \'es important saber en quins contextos es 
 \paragraph{directory} A directive marked as being valid in this context may be used inside \verb+<Directory>+, \verb+<Location>+, \verb+<Files>+, and \verb+<Proxy>+ containers in the server configuration files, subject to the restrictions outlined in Configuration Sections. 
 \paragraph{.htaccess} If a directive is valid in this context, it means that it can appear inside per-directory .htaccess files. It may not be processed, though depending upon the overrides currently active. 
 \subsection{Taula de directives}
-\begin{tabular}{|p{4cm}|p{3cm}|p{5cm}|}
+\begin{longtable}{|p{4cm}|p{3cm}|p{5cm}|}
 \hline
 \textbf{Directiva} & \textbf{Context} & \textbf{Descripció} \\
 \hline
@@ -80,20 +84,29 @@ Location & server config; VirtualHost& Applies the enclosed directives only to m
 Files & server config; VirtualHost; Directory; .htaccess& Contains directives that apply to matched filenames. 
 Exemple: 
 \footnotesize{\verb+<Files ~ ``\.(gif|png)$''>+}.\\
-\hline
-\end{tabular}
 
-\begin{tabular}{|p{4cm}|p{3cm}|p{5cm}|}
 \hline
-\textbf{Directiva} & \textbf{Context} & \textbf{Descripció} \\
+
+\verb+<Limit>+ & directory, .htaccess & Serveix per restringir l'efecte 
+del control d'accés als mètodes que definim en aquesta directiva. 
+Exemple:
+\begin{verbatim}
+<Limit POST PUT DELETE>
+  Require valid-user
+</Limit>
+\end{verbatim}
+estem restringir l'accés als usuaris que s'autentifiquin 
+per els mètodes \verb+POST+, \verb+PUT+ i \verb+DELETE+. Mirar també LimitExcept que fa el mateix però exceptuant més que restringint mètodes. \\
 \hline
 Allow, Deny, Order & Directory; .htaccess& \textbf{DEPRECATED}. Substituit pels \textit{Require}, \textit{RequireAny|All|None} \\
+\hline
+Require & directory, .htaccess & Requeriment per a que s'acompleixi una directiva d'autorització. Mirar els exemples de la documentació d'Apache. \\
 \hline
 RequireAll & Directory; .htaccess & totes les directives Require dintre d'aquesta s'han de complir. \\
 \hline
 RequireAny & Directory; .htaccess & Alguna de les directives \textit{Require} dintre d'aquesta s'han de complir. Si hi han directives \textit{Require} que no estan dintre de les \textit{Require*} aleshores s'interpreten com a que es troben en el \textit{RequireAny}\\
 \hline
-\end{tabular}
+\end{longtable}
 
 \paragraph{Options}
 Pot ser \textit{None} o m\'es d'entre molts valors d'entre els que destaquen:
@@ -184,6 +197,76 @@ Directory&
 \hline
 \end{tabular}
 
+\section{Site per usuari}
+Amb el mòdul d'\textit{Apache} \textit{mod\_userdir} podem fer que els usuaris del sistema on està instal·lat el servei tinguin un espai web personal dintre del directori de la seva \textit{home} \verb+~/public_html+. Per veure el contingut des de la web, la \textit{url} és \\ 
+
+\verb+http://ip_o_fqdn_d_apache/~aqui_posem_el_nom_de_lusuari+.
+\\
+\\
+Com he dit abans, cal que el mòdul \textit{mod\_userdir} estigui habilitat:
+\begin{verbatim}
+  $ sudo a2enmod userdir
+\end{verbatim}
+Aquesta comanda ens crea dos enllaços al directori\\
+\verb+/etc/apache2/mods_enabled+ de dos fitxers del directori\\
+\verb+/etc/apache2/mods_available+: \verb+userdir.conf+ i \verb+userdir.load+.
+\\
+Cal que el directori \verb+public_html+ dels usuaris desitjats estigui creat.\\\\
+Fitxer \verb+userdir.conf+:
+
+\begin{verbatim}
+<IfModule mod_userdir.c>
+  # establim quin és el nom del directori
+  UserDir public_html
+  # no permetem que l'usuari root en tingui
+  UserDir disabled root
+
+  # restriccions sobre el directori
+  <Directory /home/*/public_html>
+    # Permetem els següents grups de directives en 
+    # .htaccess
+    AllowOverride FileInfo AuthConfig Limit Indexes
+    
+    Options MultiViews Indexes 
+    SymLinksIfOwnerMatch IncludesNoExec
+    <Limit GET POST OPTIONS>
+      Require all granted
+    </Limit>
+    <LimitExcept GET POST OPTIONS>
+      Rquire all denied
+    </LimitExcept>
+  </Directory>
+</IfModule>
+\end{verbatim}
+
+\section{VirtualHost}
+Com crear llocs web virtuals i quines directives hi intervenen? 
+
+Amb l'\textit{Apache} com amb molts altres servidors web tenim l'opció de tenir i servir múltiples web que responen a \textit{url} de \textit{fqdn} diferents com si provenguessin de diferents servidors. De cadascuna d'aquestes en diem \textit{Virtualhost}.
+\subsection{Directives associades}
+\subsubsection{VirtualHost}
+Directiva principal d'un VirtualHost. Conté directives associades al VirtualHost. Té com a paràmetre la \textit{ip} o \textit{fqdn} destí de la petició \textit{HTTP}.
+\subsubsection{ServerName}
+Nom que ha d'aparèixer en la \textit{url} de la petició.
+\subsubsection{ServerAlias}
+Utilitzat per configurar un alias per a un virtualhost basat en nom. Context: \textit{VirtualHost}. Exemple:
+\begin{verbatim}
+<VirtualHost *:80>
+  ServerName server.domain.com
+  ServerAlias server server2.domain.com server2
+  ServerAlias *.example.com
+  UseCanonicalName Off
+  # ...
+</VirtualHost> 
+\end{verbatim}
+\subsubsection{DocumentRoot}
+Directori arrel del contingut \textit{html} del lloc web virtual.
+\subsection{VirtualHosting basat en ip}
+Depenent de la \textit{ip} per on li arriba la petició el servidor respon amb un lloc web virtual o altre. 
+\subsection{VirtualHosting basat en nom}
+Depenent del nom del servidor en la \textit{url} el servidor respon amb un lloc un un altre. Aquí és clau el valor que donem en la directiva \textit{Servername} que és el nom del servidor per el qual ha de respondre el lloc web virtual.
+\subsection{VirtualHosting basat en port}
+Depenent del port per on li arriba la petició el servidor respon amb un lloc web virtual o altre. 
 
 \section{Control de l'acc\'es als directoris}
 
@@ -192,6 +275,16 @@ are not contained in another authorization directive like <RequireAll>, they are
 implicitly contained within a <RequireAny> directive. Thus the first one to
 authorize a user authorizes the entire request, and subsequent Require directives
 are ignored.
+
+\section{Crear regles en Apache}
+La idea és crear regles les quals estàn formades per condicions. Les directives associades són:
+\begin{itemize}
+    \textit{RewriteEngine} que ha d'estar a \textit{on}.
+    \textit{RewriteCond} per crear una condició.
+    \textit{RewriteRule}
+\end{itemize}
+\subsection{Operadors}
+[NX], [R,NC], [F], [OR], [R,L], [P].
 
 \section{Apache com a proxy}
 Apache tant pot desempènyer la funcionalitat de proxy directe o proxy (\textit{Forward proxy}) com la de proxy invers o gateway (\textit{Reverse proxy}).
@@ -226,6 +319,101 @@ Protocols que pot implementar com a proxy:
 		Per accedir a qualsevol lloc a trav\'es del proxy cal ser del domini internal.exemple.com. Fixeu-vos que despr\'es, en el firewall, pot haver-hi una regla que nom\'es deixi sortir les consultes HTTP que surten del proxy.
 \end{itemize}
 
+\subsubsection{Acl's en Apache}
+Amb les directives \textit{Proxy} i \textit{Require} podem fer regles acl per filtrar el tràfic HTTP. La sintaxi\footnote{la \textit{url} de la directiva \textit{Proxy} pot ser una expressió regular}:
+\begin{verbatim}
+  <Proxy URL>
+    regles acl
+  </Proxy>
+\end{verbatim}
+\paragraph{Exemple de regles}
+\begin{enumerate}
+    \item \textbf{(Squid) acl localnet src 192.168.13.0/24}
+    \begin{verbatim}
+      <Proxy *>
+        Require ip 192.168.13
+        # Require not ip 192.168.13
+      </Proxy>
+    \end{verbatim}
+    \item \textbf{(Squid) srcdomain}
+    \begin{verbatim}
+      <Proxy *>
+        Require host <domini>
+        # Require not host <domini>
+      </Proxy>
+    \end{verbatim}
+    \item \textbf{(Squid) dstdomain}
+    \begin{verbatim}
+      <Proxy domini_destinacio>
+        Require ...
+      </Proxy>
+    \end{verbatim}
+    \item \textbf{(Squid) acl de tipus time}
+    \begin{verbatim}
+      acl pati MTWHF 9:00-21:00 
+      http_access allow pati
+    \end{verbatim}
+    Hem d'utilitzar expressions regulars. Per fer-ho, usem la directiva \verb+Require expr+. També utilitzem variables d'entorn que es criden amb la següent sintaxi: \verb+%{NOM_VARIABLE}+
+    \begin{verbatim}
+      <Proxy *>
+        Require expr %{TIME_HOUR} -ge 9 && 
+          %{TIME_HOUR} -le 9 
+      </Proxy>
+    \end{verbatim}
+    Sobre expressions regulars teniu més info a \cite{EXPR}.
+    \item \textbf{(Squid) acl referrer\_regex}
+    Aquí podem usar la variable %{HTTP_REFERRER} en una expressió regular.
+    \begin{verbatim}
+      <Proxy *>
+        Require expr "%{HTTP_REFERRER} >= '\.google'"
+      </Proxy>
+    \end{verbatim}
+    \item \textbf{(Squid) acl browser}
+    Aquí podem usar la variable %{HTTP_USER_AGENT} en una expressió regular.
+    \item \textbf{Llistes}.
+    \begin{verbatim}
+      <Proxy *>
+        Include ruta_del_fitxer_amb_la_llista
+      </Proxy>
+    \end{verbatim}
+    
+\end{enumerate}
+\subsubsection{Proxy com a servidor cau}
+Els objectius d'un servidor cau són els d'evitar total o parcialment les peticions que fan els clients als servidors web per a disminuir el tràfic i augmentar l'ample de banda. Si no millora significativament el rendiment un servidor cau no serveix de res. Hem de tenir clar que muntar un servidor cau \'es costós. \'Es necessari que aquest tingui un molt bon acc\'es a internet per a respondre amb celeritat a les peticions dels clients. 
+
+\paragraph{A tenir en compte en el tràfic web:}
+
+\begin{itemize}
+	\item Round trips (anades i tornades) entre client i servidor web
+	\item Ample de banda
+	\item latència: desfase o temps que triga el servidor en respondre o en processar una petició HTTP un cop l'ha rebuda.
+\end{itemize}
+
+\paragraph{Mòduls i directives \\}
+
+Per Apache com a servidor cau, el mòdul que hem de fer servir \'es \verb+mod_cache+, \verb+mod_cache_disk+ i/o \verb+mod_file_cache+ (servidor cau enmagatzema el contingut a la memòria per servir-lo m\'es ràpidament) junt amb els mòduls que necessita com a proxy. Principals directives del mòdul \verb+mod_cache+:
+
+\begin{itemize}
+	\item \verb+CacheRoot+: directori arrel on estarà el cau
+	\item \verb+CacheEnable+: quin contingut guardem al cau i a on.
+	\item \verb+CacheDisable+: quin contingut no hem de guardar.
+	\item \verb+CacheIgnoreCacheControl+: amb valor a \textit{on}, ignora la capçalera \textit{Cahe-Control:no-cache} o la capçalera \textit{Pragma: no-cache} de la petició HTTP que serveix per demanar que el contingut de la resposta no sigui servit de la cache.
+	\item \verb+CacheIgnoreHeaders+: No guardem les capçaleres de les respostes al cau.
+	\item \verb+CacheIgnoreNoLastMod+: Normalment, les respostes sense la capçalera Last Modified no són guardades al cau. Amb aquesta directiva a \textit{on} ignorem aquest fet.
+	\item \verb+CacheIgnoreQueryString+: Normalment, les respostes amb diferent query string es consideren diferents. Amb aquesta directiva a \textit{on} ignorem aquest fet i donem de resposta qualsevol contingut encara que difereixi de la query string del contingut guardat.
+	\item \verb+CacheMaxExpire+: el máxim temps en segons que guardem un document.
+	\item \verb+CacheMinExpire+: el mínim temps en segons que guardem un document.
+	\item \verb+CacheStorePrivate|NoStore|Expired+: guardem a la cache contingut encara que tingui capçaleres privades (per defecte no es guarden), no store o respostes en les que hagi expirat el contingut.
+\end{itemize}
+
+I aquí enumerem algunes de \verb+mod_cache_disk+:
+\begin{itemize}
+	\item \verb+CacheDirLevels+: Nombre de nivell de subdirectoris.
+	\item \verb+CacheDirLength+: Longitut del nom dels directoris.
+	\item \verb+CacheMax|MinFileSize+: tamany màxim | mínim del fitxer.
+	\item \verb+CacheRoot+: Ruta del directori de la cache.
+\end{itemize}
+\end{enumerate}
 \subsubsection{Proxy com a servidor cau}
 Els objectius d'un servidor cau són els d'evitar total o parcialment les peticions que fan els clients als servidors web per a disminuir el tràfic i augmentar l'ample de banda. Si no millora significativament el rendiment un servidor cau no serveix de res. Hem de tenir clar que muntar un servidor cau \'es costós. \'Es necessari que aquest tingui un molt bon acc\'es a internet per a respondre amb celeritat a les peticions dels clients. 
 
@@ -450,6 +638,7 @@ Sí. El que el Virtualhost estigui en un domini totalment diferent o no que el m
 	\bibitem{DOC} \url{http://httpd.apache.org/docs/}
 	\bibitem{w3c} \url{http://www.w3.org}
 	\bibitem{Jscape} \url{http://www.jscape.com/blog}
+	\bibitem{EXPR} \url{https://httpd.apache.org/docs/2.4/expr.html}
 \end{thebibliography}
 
 \end{document}
