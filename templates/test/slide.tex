@@ -1,0 +1,139 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass{beamer}
+ 
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+ 
+%------------------------------------------------------------
+%Information to be included in the title page:
+\title[<++>]{<++>}
+\subtitle{<++>}
+\author{<++>}
+\institute[<++>]{<++>}
+\date{<++>}
+\logo{\includegraphics[height=1cm]{Logo-Consorci-JdA.eps}}
+%------------------------------------------------------------
+ 
+%------------------------------------------------------------
+% slide en cada secció amb la llista i subratyat la secció que toca
+\AtBeginSection[]
+{
+	\begin{frame}
+		\frametitle{Table of Contents}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
+%------------------------------------------------------------
+
+\begin{document}
+
+% amb aquesta línia inserto un primer slide amb el títol, autor, etc
+% 
+\frame{\titlepage}
+
+%------------------------------------------------------------
+% Inserta slide amb la llista de continguts
+\begin{frame}
+	\frametitle{Índex de continguts}
+	\tableofcontents
+\end{frame}
+%------------------------------------------------------------
+
+\section{<++>}
+
+%------------------------------------------------------------
+% OJO: frame no es igual a slide. Un frame pot contenir mes d'un slide
+\begin{frame}
+	\frametitle{<++>}
+	% Aqui va el contingut de la diapo
+	% cada vegade que vulguis crear una transició, fica 
+	% \pause
+	%
+\end{frame}
+%------------------------------------------------------------
+ 
+%------------------------------------------------------------
+% Exemple de blocs d'exemple, remarks, i paraules i blocs 
+% importants
+%
+% \begin{frame}
+% 	\frametitle{Diapos 3 de la segona secció}
+% 	Anem a veure el bàsic \pause per crear una presentació \pause amb Beamer
+% 	Hi ara anem a marcar alguna \alert{cosa important}
+% 
+% 	\begin{block}{Remark}
+% 		Sample text
+% 	\end{block}
+% 	 
+% 	\begin{alertblock}{Important theorem}
+% 		Sample text in red box
+% 	\end{alertblock}
+% 	 
+% 	\begin{examples}
+% 		Sample text in green box. ``Examples'' is fixed as block title.
+% 	\end{examples}
+% 
+% \end{frame}
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+% Exemple de diapo amb dues columnes
+% \begin{frame}
+% 	\frametitle{Diapos 4 de la segona secció}
+% 	\begin{columns}
+% 		\begin{column}{5cm}
+% 		Això \'es una primera columna. \\
+% 		waaahhh
+% 	\end{column}
+% 	\begin{column}{5cm}
+% 		Això \'es una segona columna. \\
+% 		waaahhh
+% 	\end{column}
+% 	\end{columns}
+% \end{frame}
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+% Exemple de diapo amb text verbatim i de text al peu
+% \begin{frame}
+%   \frametitle{Diapos 5 de la segona secció}
+% 	Exemple de com ficar text en verbatim\footnote{On a fast machine.}
+% 	\begin{semiverbatim}
+% 		\$ sudo apt-get install apache2
+% 	\end{semiverbatim}
+% \end{frame}
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+\begin{frame}
+	\frametitle{Referències}
+	\begin{thebibliography}{99}
+			% \bibitem{sharelatex} \url{https://www.sharelatex.com/learn/Beamer}
+		\bibitem{<++>} \url{<++>}
+	\end{thebibliography}
+\end{frame}
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+\begin{frame}
+	\frametitle{Sobre aquest document}
+	\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+	Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+	with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+	A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+\end{frame}
+%------------------------------------------------------------
+
+\end{document}
+
+

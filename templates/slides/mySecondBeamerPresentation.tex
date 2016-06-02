@@ -1,0 +1,116 @@
+%        File: mySecondBeamerPresentation.tex
+%     Created: dom may 29 08:00  2016 C
+% Last Change: dom may 29 08:00  2016 C
+%
+\documentclass{beamer}
+ 
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+ 
+%Information to be included in the title page:
+\title[Beamer apunts]{Presentacions amb Latex}
+\subtitle{Beamer class}
+\author{Juan Aguilera}
+\institute[ins jda]{Institut Joan d'Àustria}
+\date{2016}
+\logo{\includegraphics[height=1cm]{Logo-Consorci-JdA.eps}}
+ 
+% slide en cada secció amb la llista i subratyat la secció que toca
+\AtBeginSection[]
+{
+  \begin{frame}
+	    \frametitle{Table of Contents}
+	    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+% amb aquesta línia inserto un primer slide amb el títol, autor, etc
+% 
+\frame{\titlepage}
+
+% Inserta slide amb la llista de continguts
+\begin{frame}
+ 	\frametitle{Índex de continguts}
+ 	\tableofcontents
+\end{frame}
+
+\section{Primera secció}
+
+% OJO: frame no es igual a slide. Un frame pot contenir mes d'un slide
+\begin{frame}
+	\frametitle{La meva primera diapo amb Beamer}
+	Anem a veure el bàsic per crear una presentació amb Beamer
+\end{frame}
+ 
+\section{Secció dos}
+
+\begin{frame}
+	\frametitle{Diapos de la segona secció}
+	Una altra diapo amb un altre títol
+\end{frame}
+ 
+\begin{frame}
+	\frametitle{Diapos 2 de la segona secció}
+	Anem a veure el bàsic \pause per crear una presentació \pause amb Beamer
+\end{frame}
+
+\begin{frame}
+	\frametitle{Diapos 3 de la segona secció}
+	Anem a veure el bàsic \pause per crear una presentació \pause amb Beamer
+	Hi ara anem a marcar alguna \alert{cosa important}
+
+	\begin{block}{Remark}
+		Sample text
+	\end{block}
+	 
+	\begin{alertblock}{Important theorem}
+		Sample text in red box
+	\end{alertblock}
+	 
+	\begin{examples}
+		Sample text in green box. ``Examples'' is fixed as block title.
+	\end{examples}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Diapos 4 de la segona secció}
+	\begin{columns}
+		\begin{column}{5cm}
+		Això \'es una primera columna. \\
+		waaahhh
+	\end{column}
+	\begin{column}{5cm}
+		Això \'es una segona columna. \\
+		waaahhh
+	\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Diapos 5 de la segona secció}
+	Exemple de com ficar text en verbatim\footnote{On a fast machine.}
+	\begin{semiverbatim}
+		\$ sudo apt-get install apache2
+	\end{semiverbatim}
+\end{frame}
+
+% \section{Referències}
+\begin{frame}
+	\frametitle{Referències}
+	\begin{thebibliography}{99}
+		\bibitem{sharelatex} \url{https://www.sharelatex.com/learn/Beamer}
+	\end{thebibliography}
+\end{frame}
+%https://www.sharelatex.com/learn/Beamer
+%http://tex.stackexchange.com/questions/17734/cannot-determine-size-of-graphic
+\end{document}
