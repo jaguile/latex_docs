@@ -10,33 +10,33 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[pdftex]{graphicx}
 \usepackage{longtable}
-%\setlength{\parindent}{5pt}
+\setlength{\parindent}{0pt}
 \begin{document}
 \title{Apunts d'Apache}
 \author{Juan Aguilera}
 \maketitle
 
-\begin{comment}
-oddsidemargin \the\oddsidemargin \newline
-textwidth \the\textwidth \newline
-marginparsep \the\marginparsep \newline
-marginparwidth \the\marginparwidth \newline
-hoffset \the\hoffset \newline
-paperwidth \the\paperwidth 
-\end{comment}
+% \begin{comment}
+% oddsidemargin \the\oddsidemargin \newline
+% textwidth \the\textwidth \newline
+% marginparsep \the\marginparsep \newline
+% marginparwidth \the\marginparwidth \newline
+% hoffset \the\hoffset \newline
+% paperwidth \the\paperwidth 
+% \end{comment}
 
 \tableofcontents
 \newpage
 
 \section{Instal·laci\'o del paquet apache}
-\paragraph{Versió d'apache \\}
+\subsection{Versió d'apache}
 \scalebox{.5}{\includegraphics{apache_version.png}} \\
-d'entre les novetats de la versió apache 2.4 respecte les versions anteriors cap destacar que la directiva \textit{NameVirtualHost} ja no \'es útil i \'es \textit{deprecated}.\\
+d'entre les novetats de la versió apache 2.4 respecte les versions anteriors cap destacar que la directiva \textit{NameVirtualHost} ja no \'es útil i \'es \textit{deprecated}.
+
 Per m\'es info, veure \href{https://httpd.apache.org/docs/2.4/new_features_2_4.html}{les new features d'apache a la pàgina oficial}\cite{DOC}.
 
 \section{Configuració d'apache}
-\subsection{fitxer de configuració principal}
-\paragraph{jugant amb l'index.html }
+\subsection{jugant amb l'index.html}
 Traient l'index.html de /var/www podem veure els directoris que es troben a www. Això s perque deu haver-hi per defecte un “DirectoryIndex index.html” i un “Option Indexes” si esborres el fitxer es mostra tot. Això \'es degut a que en apache2.conf ho han definides tres directives \textit{Directory} per configurar com s'ha de comportar el servei quan s'intenta accedir a aquesta ruta:
 
 \scalebox{.6}{\includegraphics{index_html.png}}
@@ -50,10 +50,12 @@ Tota la documentació sobre qualsevol directiva es pot trobar \href{https://http
 Per entendre les directives a apache \'es important saber en quins contextos es poden utilitzar. Hi han els següents:
 
 \subsection{\href{http://localhost/apache2-doc/es/mod/directive-dict.html#Context}{Context}} Indica en quin àmbit o àmbits s'aplica la directiva:
-\paragraph{server config} This means that the directive may be used in the server configuration files (e.g., apache2.conf), but not within any \verb+<VirtualHost>+ or \verb+<Directory>+ containers. It is not allowed in .htaccess files at all. 
-\paragraph{virtual host} This context means that the directive may appear inside \verb+<VirtualHost>+ containers in the server configuration files. 
-\paragraph{directory} A directive marked as being valid in this context may be used inside \verb+<Directory>+, \verb+<Location>+, \verb+<Files>+, and \verb+<Proxy>+ containers in the server configuration files, subject to the restrictions outlined in Configuration Sections. 
-\paragraph{.htaccess} If a directive is valid in this context, it means that it can appear inside per-directory .htaccess files. It may not be processed, though depending upon the overrides currently active. 
+\begin{itemize}
+	\item \textbf{server config}: This means that the directive may be used in the server configuration files (e.g., apache2.conf), but not within any \verb+<VirtualHost>+ or \verb+<Directory>+ containers. It is not allowed in .htaccess files at all. 
+	\item \textbf{virtual host}: This context means that the directive may appear inside \verb+<VirtualHost>+ containers in the server configuration files. 
+	\item \textbf{directory}: A directive marked as being valid in this context may be used inside \verb+<Directory>+, \verb+<Location>+, \verb+<Files>+, and \verb+<Proxy>+ containers in the server configuration files, subject to the restrictions outlined in Configuration Sections. 
+	\item \textbf{.htaccess}: If a directive is valid in this context, it means that it can appear inside per-directory .htaccess files. It may not be processed, though depending upon the overrides currently active. 
+\end{itemize}
 \subsection{Taula de directives}
 \begin{longtable}{|p{4cm}|p{3cm}|p{5cm}|}
 \hline
@@ -108,44 +110,48 @@ RequireAny & Directory; .htaccess & Alguna de les directives \textit{Require} di
 \hline
 \end{longtable}
 
-\paragraph{Options}
-Pot ser \textit{None} o m\'es d'entre molts valors d'entre els que destaquen:
+\textbf{Options}
+
+Pot ser \textit{None} o m\'es d'entre molts valors\footnote{\textbf{Nota:} Amb els signes \textit{+} o \textit{-} davant dels diferents valors que pot prendre \textit{Opions} voldrà dir que afegim o traiem llurs valors (si n'hi ha algun amb signe o han d'estar tots).}
+ d'entre els que destaquen:
 
 \begin{itemize}
 	\item \textit{FollowSymlinks}: Es permeten les peticions a enllaços simbòlics que hi hagin en el directori.
 	\item \textit{Indexes}: Si demanem una URL corresponent a un directori, mostra el que haguem escollit amb la directiva \textit{DirectoryIndex} (en cas que no hi hagi DirectoryIndex).
 	\item \textit{All}: Tots.
 \end{itemize}
-
-\textbf{Nota:} Amb els signes \textit{+} o \textit{-} davant dels diferents valors que pot prendre \textit{Opions} voldrà dir que afegim o traiem llurs valors (si n'hi ha algun amb signe o han d'estar tots).
-
-\paragraph{DirectoryIndex}
+\textbf{DirectoryIndex}
 
 Lista de recursos que el cliente puede encontrar en un directorio dado cuando el cliente solicita la URL de ese directorio acabada en \slash. En la lista podemos poner ficheros que estan en el directorio o rutas relativas que estan dentro del directorio. Al cliente se le devolverá el primero de los recursos que se encuentre en esa lista.\\
 Está en estos contextos: server config, virtual host, directory, .htaccess.\\
 Exemple: 
-
-	DirectoryIndex index.html 
-
+\begin{quotation}
+\noindent
+\begin{verbatim}
+DirectoryIndex index.html
+\end{verbatim}
 then a request for 
-
-\verb+http://example.com/docs/+ 
-
+\begin{verbatim}
+http://example.com/docs/
+\end{verbatim}
 would return 
-
-\verb+http://example.com/docs/index.html+ 
-
-if it exists, or would list the directory if it did not.\\
+\begin{verbatim}
+http://example.com/docs/index.html
+\end{verbatim}
+\noindent
+if it exists, or would list the directory if it did not.
 Exemple (Note that the documents do not need to be relative to the directory):
-
-	\verb+DirectoryIndex index.html index.txt /cgi-bin/index.pl+
-
+\begin{verbatim}
+DirectoryIndex index.html index.txt /cgi-bin/index.pl
+\end{verbatim}
 would cause the CGI script 
+\begin{verbatim}
+/cgi-bin/index.pl
+\end{verbatim}
+to be executed if neither index.html or index.txt existed in a directory.
 
-\verb+/cgi-bin/index.pl+ 
-
-to be executed if neither index.html or index.txt existed in a directory.\\
 Si no encuentra ninguno de esos archivos, y está establecida la opción Options Indexes para ese directorio, el servidor generará y devolverá una lista, en formato HTML, de los subdirectorios y archivos del directorio. El valor predeterminado, almacenado en \verb+/etc/apache2/apache2.conf+, es «index.html index.cgi index.pl index.php index.xhtml». Por tanto, si Apache2 encuentra un archivo en un directorio solicitado que se ajusta a alguno de esos nombres, se mostrará el primero de todos. 
+\end{quotation}
 
 \subsection{Taula de contextes}
 
@@ -198,20 +204,25 @@ Directory&
 \end{tabular}
 
 \section{Site per usuari}
-Amb el mòdul d'\textit{Apache} \textit{mod\_userdir} podem fer que els usuaris del sistema on està instal·lat el servei tinguin un espai web personal dintre del directori de la seva \textit{home} \verb+~/public_html+. Per veure el contingut des de la web, la \textit{url} és \\ 
-
-\verb+http://ip_o_fqdn_d_apache/~aqui_posem_el_nom_de_lusuari+.
-\\
-\\
+Amb el mòdul d'\textit{Apache} \textit{mod\_userdir} podem fer que els usuaris del sistema on està instal·lat el servei tinguin un espai web personal dintre del directori de la seva \textit{home} \verb+~/public_html+. Per veure el contingut des de la web, la \textit{url} és 
+\begin{verbatim}
+http://ip_o_fqdn_d_apache/~aqui_posem_el_nom_de_lusuari
+\end{verbatim}
 Com he dit abans, cal que el mòdul \textit{mod\_userdir} estigui habilitat:
 \begin{verbatim}
   $ sudo a2enmod userdir
 \end{verbatim}
-Aquesta comanda ens crea dos enllaços al directori\\
-\verb+/etc/apache2/mods_enabled+ de dos fitxers del directori\\
-\verb+/etc/apache2/mods_available+: \verb+userdir.conf+ i \verb+userdir.load+.
-\\
-Cal que el directori \verb+public_html+ dels usuaris desitjats estigui creat.\\\\
+Aquesta comanda ens crea dos enllaços al directori
+\begin{verbatim}
+/etc/apache2/mods_enabled
+\end{verbatim}
+de dos fitxers del directori \verb+/etc/apache2/mods_available+:
+\begin{verbatim}
+userdir.conf 
+userdir.load
+\end{verbatim}
+Cal que el directori \verb+public_html+ dels usuaris desitjats estigui creat.
+
 Fitxer \verb+userdir.conf+:
 
 \begin{verbatim}
@@ -413,7 +424,7 @@ I aquí enumerem algunes de \verb+mod_cache_disk+:
 	\item \verb+CacheMax|MinFileSize+: tamany màxim | mínim del fitxer.
 	\item \verb+CacheRoot+: Ruta del directori de la cache.
 \end{itemize}
-\end{enumerate}
+% \end{enumerate}
 \subsubsection{Proxy com a servidor cau}
 Els objectius d'un servidor cau són els d'evitar total o parcialment les peticions que fan els clients als servidors web per a disminuir el tràfic i augmentar l'ample de banda. Si no millora significativament el rendiment un servidor cau no serveix de res. Hem de tenir clar que muntar un servidor cau \'es costós. \'Es necessari que aquest tingui un molt bon acc\'es a internet per a respondre amb celeritat a les peticions dels clients. 
 
