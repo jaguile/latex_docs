@@ -1,0 +1,65 @@
+12 normes per desenvolupar (especialment serveis): http://12factor.net/
+-----------------------------------------------------------------------------------------------------------
+Mira mail de la llista d’informàtics de cicles del 26 de Juny de Juan Francisco Gonzalez:
+
+El segon contingut (Programació multifil)  em sembla prou clar, programació multifill amb els threads de java.
+El meu dubte és cóm treballar el primer contingut (programació multiprocés, que sembla enfocat a la programació en paral.lel). Em sona una mica la utilització d'algunes llibreries en C per la comunicació entre processos mitjançant missatges.
+Al material de l'IOC aquest primer contingut veig que l'utilitzan com una introducció general al concepte de processos i parlen d'una classe java anomenada Executor que jo la veig com una abstracció per la utilització de threads, no com comunicació entre processos independents.
+
+En fí, si algú li sona aquest mòdul i te alguna idea de com treballar la programació multiprocés o en paral.lel, qualsevol consell és benvingut.
+
+Bon estiu a tots,
+Juan Fco. González
+IES Marianao
+Sant Boi de Llobregat
+
+--------------------------------------------------------------------------
+
+Què tal fer servir actors:
+http://doc.akka.io/docs/akka/snapshot/java/untyped-actors.html
+(Sobre actors: http://www.genbetadev.com/paradigmas-de-programacion/manejar-la-concurrencia-con-actores )
+
+
+Hola
+
+Els apunts de la IOC estan molt bé per programació multifil en Java, però per  processos jo prefereixo les crides POSIX des de C: fork(), exec(), wait() , i si dona temps, gestió de senyals amb kill() i signal().
+
+El que no em dona temps a la UF es veure la comunicació entre processos mitjançant pipes, fifos, semafors, cues de missatges, memòria compartida, etc.   Però no és cap inconvenient perquè a la següent UF veuen ja comunicació mitjançant sockets.
+
+T\'{e}nvio en privat exercicis, apunts i examens per si et serveixen d'alguna cosa. En quan tingui un moment els penjaré també a la web de compartir materials: https://sites.google.com/a/xtec.cat/informatica_comunicacions/?pli=1
+
+-----------------------------------------------------------------------------------------------------------
+
+Bàsicament el que donava a processos, amb el poc temps que tenim i que hem de compartir amb fils, és:
+
+- Definición de programa-proceso-hilo, tabla de procesos, estado de un proceso, directorio /proc
+- Herramientas del s.o. para trabajar con procesos: ps, pstree, top, kill, pkill, nohup, nice, renice, lsof, pmap
+- Proceso padre y proceso hijo. ¿Qué pasa cuando uno de los dos muere?
+- Funciones C para crear procesos: system, fork, execve
+- Funciones C para obtener el PID: getpid y getppid
+- Funciones C para sincronizar: wait y waitpid
+- Funciones C para acceder a variables de entorno: getenv y putenv
+- Funciones C para obtener y establecer límites del s.o.: getrlimit y setrlimit
+
+- Señales del sistema
+- Gestión de las señales: ignorar, gestión por defecto, gestión programada y enmascaramiento
+- Gestión programada de las señales: ¿Qué pasa cuando procesando una señal llega otra? ¿Funciones seguras?
+- Funciones C para enviar señales: kill
+- Funciones C para gestionar señales: signal y sigaction, sigprocmask, sigpending y sidsuspend
+- Funciones C que permiten crear cronómetro: alarm + señal SIGALRM
+
+Salut
+-----------------------------------------------------------------------------------------------------------
+
+Hola,
+Seria entrar en un món nou de la programació. Aquest curs (a classe de la uni) hem après Erlang. Per a processos, senyals, missatges, etc. m'ha agradat molt, però repeteixo que la filosofia canvia (funcional). Erlang és el llenguatge del Whatsapp, "er-lang-guage" ;-) 
+
+
+-----------------------------------------------------------------------------------------------------------
+
+Pels interessats sobre el tema threads, he trobat el llibre "Java 7 Concurrency Cookbook" (editorial Packt Publishing, 2012).
+El llibre està actualitzat, la forma d'avançar amb els exemples és prou clara i la web de l\'{e}ditorial permet baixar-se els projectes eclipse que es mostren al llibre.
+Salutacions,
+
+
+

@@ -1,0 +1,220 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\begin{document}
+\title{Desplegament d'aplicacions amb Docker}
+\maketitle
+
+\tableofcontents
+% más info: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\lstset{%language=bash,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize,
+	breaklines=true, 
+	commentstyle=\color{brown},
+	% si queremos marco en el código
+	% frame=single,
+}
+
+% ----------- ejemplos de código fuente
+% codigo en la misma linea carmela \lstinline! sudo apt-get install apache2!
+%
+% \begin{lstlisting}
+% # ejecuto en la linea de comandos como sudoer
+% sudo apt-get install apache2 
+% \end{lstlisting}
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+\section{Motius}
+Són múltiples els motius per als quals fem servir Docker. Un dels motius \'{e}s la portabilitat d'aplicacions i el desplegament d'aplicacions en entorns virtuals molt lleugers (Contenidors Docker) instal·lant en aquests entorns les llibreries i serveis necessaris per a que l'aplicació funcioni i no haver de fer-ho en la teva màquina o en una màquina virtual sencera. Per la mateixa raó, els testing d'aplicacions resulten tamb\'{e} molt m\'{e}s lleugers fent servir aquests entorns. D'aquesta manera, doncs, podem penjar contenidors amb l'aplicació i llibreries necessàries per a que s\'{e}xecutin correctament en qualsevol màquina i sense gaire pes.
+
+Hi han tamb\'{e} motius de seguretat: les aplicacions queden enjaulades en els contenidors, els quals poden tenir menys funcionalitats i menys comandes del comú.
+
+\section{Definicions}<++>
+\begin{itemize}
+	\item \textbf{Imatge}: Una imatge \'{e}s un sistema de fitxers i una sèrie de paràmetres de configuració per fer servir en temps d'execució. Mai canvia. Una imatge pot contenir software instal·lat tot el complexe com volguem: bases de dades, serveis, etc. Qualsevol pot crear imatges i penjar-les a \textit{Docker Hub}, per exemple, i baixar-te-les per carregar-les a qualsevol contenidor.
+	\item \textbf{Contenidor}: Els contenidors es creen a partir d'imatges base. Són instàncies d'imatges. Les imatges es carreguen en el contenidor quan creem una instància d'aquest.
+	\item \textbf{\textit{Docker Hub}}: Repositori d'imatges que la gent penja per compartir. Hi han imatges penjades pels usuaris i imatges oficials (\textit{library}). Pot sincronitzar-se amb \textit{GitHup} de manera que podem tenir un Dockerfile al GitHup per crear imatges.
+\end{itemize}<++>
+
+\section{Per sota de Docker}<++>
+
+\subsection{Sistema de fitxers \textit{aufs}}<++>
+Tipus de sistema de fitxers. Prov\'{e} de \textit{ufs}, unió de sistemes de fitxers. Per explicar-ho d'una manera fàcil, la manera com funciona aquest tipus de sistemes de fitxers \'{e}s com la d'un controlador de versions sobre l'arbre de directoris, de tal manera que a mesura que anem fent canvis sobre el sistema es van creant noves versions, de tal manera que podem tirar enrera, utilitzar determinades versions, et.
+
+\subsection{\textit{Systemd}}<++>
+
+\subsection{\textit{CGroups}}<++>
+
+\subsection{\textit{namespaces}}<++>
+
+\section{Comandes docker}
+\begin{lstlisting}
+	docker run -ti debian /bin/bash
+	\end{lstlisting}Executem el proc\'{e}s \verb!/bin/bash! en un nou contenidor basat en la imatge \textit{debian} obrint terminal interactiu\footnote{Quan nosaltres fem referència a una imatge com en l\'{e}xemple d'abans, el que fa \textit{docker} \'{e}s buscar la imatge en local, si no la troba la va a buscar a \textit{dockerhub}.}. En el moment que acaba la comanda que hem executat en el contenidor amb l'ordre \lstinline! run! el contenidor s'atura. Si, com en aquest exemple, volem sortir del bash que hem executat però sense aturar-ho, nom\'{e}s per canviar al terminal nostre, podem fer-ho amb \lstinline! CTRL+P+CTRL+Q!. Per tornar un altre cop al \verb+/bin/bash+ del contenidor fem un 
+
+\begin{lstlisting}
+	docker attach id_contenidor
+\end{lstlisting}
+
+Si el contenidor s'atura (perquè l'hem aturat amb la comanda \lstinline!docker stop! o perquè la comanda amb la que l'hem iniciat ha terminat)el podem tornar a iniciar amb un \lstinline! docker start!.
+
+Per eliminar el contenidor, \lstinline! docker rm ID!. Exemples:
+
+\begin{itemize}
+	\item Arrencar en FG:
+		\begin{lstlisting}
+docker run -ti imatge comanda
+		\end{lstlisting}
+	\item veure els contenidors que tenim (aturats o no)
+		\begin{lstlisting}
+docker ps -a
+		\end{lstlisting}
+	\item Esborrar tots els contenidors que tenim:
+		\begin{lstlisting}
+docker ps -qa | xargs docker rm -f
+		\end{lstlisting}
+	\item Executar una comanda en un contenidor que està iniciat
+		\begin{lstlisting}
+docker exec [-ti] ID CMD
+		\end{lstlisting}
+	\item Buscar imatges en \textit{DockerHub}
+		\begin{lstlisting}
+docker search PATRO_DE_BUSQUEDA
+		\end{lstlisting}
+	\item Veure imatges locals
+		\begin{lstlisting}
+docker images
+		\end{lstlisting}
+	\item Veure ip del contenidor
+		\begin{lstlisting}
+docker inspect --format '{{  .NetworkSettings.IPAddress }}' 9fe0f41200a1 
+		\end{lstlisting}
+	\item Mapejar ports:
+		\begin{lstlisting}
+# Mapeja automàticament tots els ports 
+# exposats pel contenidor. 
+# Assigna ports alts
+docker run -P -d kpeiruza/lpic2-apache2-auth
+		\end{lstlisting}
+	\item Mapejem port amb port de l'anfitrió
+		\begin{lstlisting}
+# Mapeja el port 80 del contenidor al 8000 de l'amfitrió
+docker run -p 8000:80 -d kpeiruza/lpic2-apache2-auth
+		\end{lstlisting}
+
+		
+	\item Llistar els volums creats:
+		\begin{lstlisting}
+docker volume ls
+		\end{lstlisting}
+\end{itemize}<++>
+
+
+%TODO FER LA PROVA AQUESTA DE crear un directori, tancar el contenidor i recuperar-ho per tornar a veure el directori creat.  
+
+\section{Dockerfile}
+fitxer de configuració per fer el build d'una imatge.
+
+Què podem fer amb un \textit{Dockerfile}? Per exemple, podem executar comandes sobre un contenidor amb el fitxer dokerfile i crear una imatge novai, a m\'{e}s, pujar-la a git i a la vegada enllaçar-ho amb dockerhub amb la comanda 
+\begin{lstlisting}
+docker build -t <etiqueta> 
+\end{lstlisting}el nom de l'etiqueta \'{e}s e nom que li volem donar a la nova imatge.
+
+\section{Volums amb docker}Amb Docker \'{e}s possible crear volums interns, volums que siguin persistents i que estiguin identificats amb un nom i volums mapejats amb directoris o volums externs. 
+
+Per exemple, pot ser interessant crear un volum mapejat amb un directori de la nostra màquina anfitriona de tal manera que en ell hi haguessin allotjades totes les dades d'una base de dades. Així, les dades persistirien encara que el contenidor s'aturès.
+
+Un altre exemple. Exercici: 
+
+Crea una imatge binària amb nom i un volum amb nom per a reproduïr música. Pots emprar comandes com mpg123 o mplayer. Per on començar? executa un contenidor amb 2 volums, un de persistent (amb nom) i un que mapegi un directori del sistema a un del contenidor, per tal de passar-nos els mp3 amb la comanda \verb+cp+.
+
+Comanda que crea el contenidor amb els volums que toquen:
+
+\begin{lstlisting}
+docker run --device=/dev/snd:/dev/snd --rm -it -v ~/Baixades:/downloads -v lsmrevamusica:/musica debian /bin/bash
+\end{lstlisting}
+
+Què hem fet? hem iniciat un contenidor executant interactivament una sessió de bash; amb l'opció \textit{--device} podem afegir un dispositiu del host al contenidor. En aquest cas, hem afegit el dispositiu de so\footnote{\textit{/dev/snd} \'{e}s el dispositiu on trobem tots els drivers de totes les targetes de so a Linux}; amb l'opció \textit{--rm} ens assegurem que el contenidor s'esborra quan surt; amb les opcions \textit{-v} creem els volums. El primer volum (\textit{/downloads}) el mapejem amb l’anfitrió (\textit{~/Baixades}), despr\'{e}s creem un altre volum donan-li l'etiqueta \textit{lsrevamusica} i que es munta a \textit{/musica}.
+
+Amb això, podríem ara entrar en el contenidor i instal·lar un reproductor mp3 per escoltar música. Com crear ara la imatge? Tenim dues opcions:
+
+\begin{enumerate}
+	\item amb \textit{docker commit}:
+		\begin{lstlisting}
+docker commit 376da04ee184 exerMplayer
+		\end{lstlisting}
+		On el nombre que hi apareix suposo que \'{e}s l'id del contenidor.
+
+	\item creant un \textit{dockerFile}
+\end{enumerate}<++>
+
+\section{Mysql & Wordpress}
+
+En la \textit{url} de la bibliografia \cite{MYSQL} hi han els paràmetres necessaris per configurar des de la comanda docker usuaris, passwords i bases de dades. Exemple:
+
+\begin{lstlisting}
+docker run --name wordpress -e WORDPRESS_DB_PASSWORD=wordpress -p 8080:80 --link wpdb:mysql -ti wordpress
+\end{lstlisting}
+
+Ara hem de fer persistents les dades: les de mysql i les de wordpress. COm? mapejant-les amb un directori a l'anfitrió. Hem de crear volums que es mapejin amb aquests directoris. El servei apache aleshores aniria en un altre contenidor i hauríem de mapejar el seu \textit{/var/www/html} amb un directori de l'anfitrió.
+
+\section{docker-machine}<++>
+
+Amb docker-machine podem crear una màquina virtual que sigui servidor de màquines docker. Amb les comandes de docker podem accedir a la màquina virtual fàcilment, per lo que no cal arrancar-la a ma, per exemple, des del virtualbox. Podem tamb\'{e}, amb la comanda \textit{docker-machine} gestionar els contenidors de dintre de la màquina virtual.
+
+
+%todo - 	Nota: per AWS hi han docker-machine --driver amazon
+
+\section{Conceptes relacionats}<++>
+
+\subsection{Open Container Project}<++>
+
+\subsection{Paravirtualització}<++>
+
+\subsection{Google apps engine}<++>
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ jaguile apunts}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+
+\begin{thebibliography}{99}
+	\bibitem{docs.docker} \url{https://docs.docker.com/linux/}
+
+		\textit{Getting Started} i instal·lació.
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+
+	\bibitem{install.docker} \url{https://docs.docker.com/engine/installation/linux/debian/}
+
+	\bibitem{MYSQL}\url{https://hub.docker.com/_/mysql/}
+
+		Com configurar una base de dades en un contenidor.
+
+\end{thebibliography}
+
+\end{document}
+
+

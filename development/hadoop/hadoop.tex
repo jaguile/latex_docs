@@ -1,0 +1,102 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\begin{document}
+\title{Introducció a Hadoop i Big Data amb Cloudera}
+\maketitle
+
+% más info: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\lstset{%language=bash,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize,
+	breaklines=true, 
+	commentstyle=\color{brown},
+	% si queremos marco en el código
+	frame=single,
+}
+
+% ----------- ejemplos de código fuente
+% codigo en la misma linea carmela \lstinline! sudo apt-get install apache2!
+%
+% \begin{lstlisting}
+% # ejecuto en la linea de comandos como sudoer
+% sudo apt-get install apache2 
+% \end{lstlisting}
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+\begin{abstract}
+L’entorn Big Data està evolucionant contínuament a mesura que sorgeixen noves tecnologies i les tecnologies existents maduren. Aquest s un curs que cobreix la arquitectura i l’ecosistema de dades Hadoop. Aquestes tecnologies són la base del moviment Big Data, facilitant una gestió i administració escalable pel processament de gran quantitats de dades.
+
+Els alumnes que completin el curs entendran l’arquitectura dels clústers Hadoop, tan a nivell de hardware com software. Els alumnes aprendran a aplicar Hadoop i les tecnologies Big Data relacionades, com MapReduce, Hive, Impala i Pig en el desenvolupament de l’anàlisi i la resolució dels problemes als que s’enfronten les empreses avui en dia.
+
+Adreçat a docents de CFGS que imparteixin assignatures relacionades amb Big Data i vulguin traslladar la formació en tecnologia Cloudera els seus estudiants a partir del projecte Cloudera Academic.
+
+Requisits previs: Formació en Sistemes Operatius, experiència programant en Java, Python o C/C++ per assignacions: i un coneixement general de les xarxes i els sistemes distribuïts. Es recomana estar familiaritzat amb Linux i Bases de Dades.
+
+Eines: Màquina virtual Cloudera Hadoop configurada completament, incloent conjunts de dades per pràctiques de laboratori.
+\end{abstract}
+
+\tableofcontents
+
+\section{Conceptes bàsics de Hadoop}<++>
+
+\section{Ecosistema Hadoop. Introducció a MarReduce}<++>
+
+\section{Programant MapReduce en Java}<++>
+
+\section{Api Hadoop}<++>
+
+\section{Divisors i reductors. Inputs i outputs de Java}<++>
+
+\section{Algoritmes comuns de MapReduce}<++>
+
+\section{Eines Hadoop per l'adquisició de dades}<++>
+
+\section{Introducció a Pig}<++>
+
+\section{Introducció a Hive}<++>
+
+\section{Processament de textos amb Hive}<++>
+
+\section{Introducció a Impala}<++>
+
+\section{Conceptes relacionats}
+
+\subsection{Computació distribuïda}<++>
+
+
+\subsection{Middleware: SOAP i RPC}<++>
+
+\subsection{Model de programació MapReduce}<++>
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+
+\begin{thebibliography}{99}
+	\bibitem{<++>} 
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+\end{thebibliography}
+
+\end{document}
+
+

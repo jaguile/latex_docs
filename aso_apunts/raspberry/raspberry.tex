@@ -1,0 +1,61 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\begin{document}
+\title{Raspberry projects}
+\maketitle
+
+% más info: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\lstset{%language=bash,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize,
+	breaklines=true, 
+	commentstyle=\color{brown},
+	% si queremos marco en el código
+	frame=single,
+}
+
+% ----------- ejemplos de código fuente
+% codigo en la misma linea carmela \lstinline! sudo apt-get install apache2!
+%
+% \begin{lstlisting}
+% # ejecuto en la linea de comandos como sudoer
+% sudo apt-get install apache2 
+% \end{lstlisting}
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+\section{<++>}
+
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+
+\begin{thebibliography}{99}
+	\bibitem{<++>} 
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+	\bibitem{MUSIC} \url{https://www.linux.com/learn/create-fully-automated-light-and-music-show-holidays-part-1}
+\end{thebibliography}
+
+\end{document}
+
+

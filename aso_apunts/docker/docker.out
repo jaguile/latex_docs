@@ -1,0 +1,17 @@
+\BOOKMARK [1][-]{section.1}{Motius}{}% 1
+\BOOKMARK [1][-]{section.2}{Definicions}{}% 2
+\BOOKMARK [1][-]{section.3}{Per sota de Docker}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Sistema de fitxers aufs}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Systemd}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{CGroups}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{namespaces}{section.3}% 7
+\BOOKMARK [1][-]{section.4}{Comandes docker}{}% 8
+\BOOKMARK [1][-]{section.5}{Dockerfile}{}% 9
+\BOOKMARK [1][-]{section.6}{Volums amb docker}{}% 10
+\BOOKMARK [1][-]{section.7}{Mysql \040Wordpress}{}% 11
+\BOOKMARK [1][-]{section.8}{docker-machine}{}% 12
+\BOOKMARK [1][-]{section.9}{Conceptes relacionats}{}% 13
+\BOOKMARK [2][-]{subsection.9.1}{Open Container Project}{section.9}% 14
+\BOOKMARK [2][-]{subsection.9.2}{Paravirtualitzaci\363}{section.9}% 15
+\BOOKMARK [2][-]{subsection.9.3}{Google apps engine}{section.9}% 16
+\BOOKMARK [1][-]{section.10}{Sobre aquest document}{}% 17

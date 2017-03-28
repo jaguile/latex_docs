@@ -7,10 +7,30 @@
 \usepackage[utf8]{inputenc}
 \usepackage[obeyspaces]{url}
 \usepackage{comment}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
 \begin{document}
-\title{Docker per el desenvolupament d'aplicacions}
+\title{Teoria de la comunicació}
 \maketitle
+
+% más info: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\lstset{%language=bash,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize,
+	breaklines=true, 
+	commentstyle=\color{brown},
+	% si queremos marco en el código
+	frame=single,
+}
+
+% ----------- ejemplos de código fuente
+% codigo en la misma linea carmela \lstinline! sudo apt-get install apache2!
+%
+% \begin{lstlisting}
+% # ejecuto en la linea de comandos como sudoer
+% sudo apt-get install apache2 
+% \end{lstlisting}
 
 \begin{comment}
 oddsidemargin \the\oddsidemargin \newline
@@ -21,7 +41,13 @@ hoffset \the\hoffset \newline
 paperwidth \the\paperwidth 
 \end{comment}
 
-\section{<++>}
+\section{Comunicació serial}<++>
+\section{Frame relay}<++>
+\section{Circuit Virtual}<++>
+\section{DTE & DCE}<++>
+\section{Conmutació de paquets}<++>
+\section{Fiber Distributed Data Interface}
+\section{Fiber channel over ethernet}<++>
 
 
 \section{Sobre aquest document}
@@ -33,7 +59,6 @@ A copy of the license is included in the section entitled \href{http://www.gnu.o
 \begin{thebibliography}{99}
 	\bibitem{<++>} 
 		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
-	\bibitem{LINUXFOUND}{https://www.linux.com/news/3-reasons-docker-and-containerization-lit-application-development-video}
 \end{thebibliography}
 
 \end{document}

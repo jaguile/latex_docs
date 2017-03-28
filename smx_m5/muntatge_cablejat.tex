@@ -1,0 +1,126 @@
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[obeyspaces]{url}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\begin{document}
+\title{<++>}
+\maketitle
+
+% más info: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\lstset{%language=bash,
+	backgroundcolor=\color{white},
+	basicstyle=\footnotesize,
+	breaklines=true, 
+	commentstyle=\color{brown},
+	% si queremos marco en el código
+	frame=single,
+}
+
+% ----------- ejemplos de código fuente
+% codigo en la misma linea carmela \lstinline! sudo apt-get install apache2!
+%
+% \begin{lstlisting}
+% # ejecuto en la linea de comandos como sudoer
+% sudo apt-get install apache2 
+% \end{lstlisting}
+
+\begin{comment}
+oddsidemargin \the\oddsidemargin \newline
+textwidth \the\textwidth \newline
+marginparsep \the\marginparsep \newline
+marginparwidth \the\marginparwidth \newline
+hoffset \the\hoffset \newline
+paperwidth \the\paperwidth 
+\end{comment}
+
+\section{Materials}
+
+\begin{itemize}
+	\item Tipus de cable
+	\item Canaletes, angles, derivadors, etc.
+	\item \textit{pela cables}
+	\item Crimpador
+	\item Taladre
+	\item tornavís
+	\item cargols, arandel·les
+	\item aparell per ficar els cables en la roseta famella
+	\item \textit{Càncamos} per poder posar els cargols
+\end{itemize}<++>
+
+\section{Canaletes}
+Tinguem en compte:
+
+\begin{itemize}
+	\item Canal
+	\item Angles
+	\item Derivadors
+	\item Canal estret d'un cable
+	\item Canal estret amb separació
+\end{itemize}<++>
+
+\section{Procès}
+
+\subsection{Planificació}
+
+\begin{itemize}
+	\item Mesurar el que ens cal per cada paret
+	\item angles
+\end{itemize}<++>
+
+\subsection{Fer els forats a la paret}
+
+Els forats es fan al llarg de tota la línia per on han de passar les canaletes. Un forat a cada metre o metre i mig just a la meitat de l'amplada de la canaleta.
+
+\subsection{Serrar les canaletes}<++>
+
+\subsection{Fixar les canaletes en la paret}
+
+\begin{itemize}
+	\item Pegant-les
+	\item fent forats
+\end{itemize}
+
+\subsection{Com fer forats amb el taladre}
+
+\begin{itemize}
+	\item Broca a utilitzar
+	\item Seguretat (guants, ulleres, etc)
+\end{itemize}<++>
+
+\subsection{grimpar}<++>
+
+\subsection{Fer arribar tots els cables al rack}<++>
+
+\section{Preguntes}
+
+\begin{enumerate}
+	\item Com han de ser de grans les canaletes? Potser s'ha de calcular segons els cables que han de passar per ella? Un cable per port?
+	\item Una canaleta per grup?
+	\item Com s'ha de fer el prototip, per a que passi nom\'{e}s un cable?
+\end{enumerate}<++>
+
+\section{Sobre aquest document}
+\textbf{Copyright}\copyright\ \textbf{\the\year\ Juan Aguilera}.\\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;\\
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\\
+A copy of the license is included in the section entitled \href{http://www.gnu.org/licenses/fdl.html}{``GNU Free Documentation License``}.
+\begin{thebibliography}{99}
+	\bibitem{<++>} 
+		% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+		\bibitem{canaletes}\url{http://3didshop.com/canaletas-bloque0.html}
+		\bibitem{Muntatge}\url{https://www.youtube.com/watch?v=zqGIhLY8Sns}
+
+
+\end{thebibliography}
+
+\end{document}
+
+

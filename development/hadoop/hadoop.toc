@@ -1,0 +1,17 @@
+\select@language {catalan}
+\contentsline {section}{\numberline {1}Conceptes b\IeC {\`a}sics de Hadoop}{2}{section.1}
+\contentsline {section}{\numberline {2}Ecosistema Hadoop. Introducci\IeC {\'o} a MarReduce}{2}{section.2}
+\contentsline {section}{\numberline {3}Programant MapReduce en Java}{2}{section.3}
+\contentsline {section}{\numberline {4}Api Hadoop}{2}{section.4}
+\contentsline {section}{\numberline {5}Divisors i reductors. Inputs i outputs de Java}{2}{section.5}
+\contentsline {section}{\numberline {6}Algoritmes comuns de MapReduce}{2}{section.6}
+\contentsline {section}{\numberline {7}Eines Hadoop per l'adquisici\IeC {\'o} de dades}{2}{section.7}
+\contentsline {section}{\numberline {8}Introducci\IeC {\'o} a Pig}{2}{section.8}
+\contentsline {section}{\numberline {9}Introducci\IeC {\'o} a Hive}{2}{section.9}
+\contentsline {section}{\numberline {10}Processament de textos amb Hive}{3}{section.10}
+\contentsline {section}{\numberline {11}Introducci\IeC {\'o} a Impala}{3}{section.11}
+\contentsline {section}{\numberline {12}Conceptes relacionats}{3}{section.12}
+\contentsline {subsection}{\numberline {12.1}Computaci\IeC {\'o} distribu\IeC {\@umlaut \i }da}{3}{subsection.12.1}
+\contentsline {subsection}{\numberline {12.2}Middleware: SOAP i RPC}{3}{subsection.12.2}
+\contentsline {subsection}{\numberline {12.3}Model de programaci\IeC {\'o} MapReduce}{3}{subsection.12.3}
+\contentsline {section}{\numberline {13}Sobre aquest document}{3}{section.13}

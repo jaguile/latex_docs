@@ -1,0 +1,18 @@
+\select@language {catalan}
+\contentsline {section}{\numberline {1}Motius}{2}{section.1}
+\contentsline {section}{\numberline {2}Definicions}{2}{section.2}
+\contentsline {section}{\numberline {3}Per sota de Docker}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}Sistema de fitxers \textit {aufs}}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}\textit {Systemd}}{3}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}\textit {CGroups}}{3}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}\textit {namespaces}}{3}{subsection.3.4}
+\contentsline {section}{\numberline {4}Comandes docker}{3}{section.4}
+\contentsline {section}{\numberline {5}Dockerfile}{4}{section.5}
+\contentsline {section}{\numberline {6}Volums amb docker}{4}{section.6}
+\contentsline {section}{\numberline {7}Mysql & Wordpress}{5}{section.7}
+\contentsline {section}{\numberline {8}docker-machine}{5}{section.8}
+\contentsline {section}{\numberline {9}Conceptes relacionats}{6}{section.9}
+\contentsline {subsection}{\numberline {9.1}Open Container Project}{6}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}Paravirtualitzaci\IeC {\'o}}{6}{subsection.9.2}
+\contentsline {subsection}{\numberline {9.3}Google apps engine}{6}{subsection.9.3}
+\contentsline {section}{\numberline {10}Sobre aquest document}{6}{section.10}
