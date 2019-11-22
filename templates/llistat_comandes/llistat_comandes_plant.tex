@@ -1,0 +1,57 @@
+<+	+>	!comp!	!exe!
+%        File: !comp!expand("%:p:t")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+% Tamanys del document: 10pt(*), 11pt i 12pt,
+%
+\documentclass[a4paper,twocolumn,10pt]{report}
+\usepackage[obeyspaces]{url}
+\setlength{\columnsep}{15mm}
+\setlength{\parindent}{-4mm}
+\pagestyle{myheadings} % sin enumeración
+
+\begin{document}
+%\the\parskip
+\section*{<++>}
+
+% Fica aquí el primer paràgraf, abans del \vspace.
+%
+<++>
+
+\vspace{5mm} % dejamos espacio entre el primer párrafo y la lista.
+
+% Fica aquí el segon paràgraf, abans del \parskip.
+%
+% Exemple:
+% \verb/$\backslash$\#/ prints a pound sign: \#.
+
+<++>
+
+\parskip=1.5mm %\Modifico el parskip del documento.
+
+% A partir del parskip fiquem la resta del llistat.
+%
+% Exemple:
+%
+%\verb/$\backslash$\$/ prints a dollar sign: \$.
+%
+%\verb/$\backslash$\%/ prints a percent sign: \%.
+%
+%\verb/$\backslash$$<$/ in tabbing environment, puts text to left of local left margin.
+%
+%\verb/\paragraph[toctitle]{text}/ begins a new paragraph, automatically headed and numbered. Optional toctitle contains entry for the table of contents if different from text.
+%
+% com configurar a latexsuite. 
+% Paràmetres i macros a tex.vim. 
+% Vim l'anirà recarregant cada vegada.
+
+<++>
+
+
+\begin{thebibliography}{99}
+\bibitem{<++>} 
+% Exemple url: \bibitem{Debian} \url{https://wiki.debian.org/es}%
+\end{thebibliography}
+
+\end{document}
